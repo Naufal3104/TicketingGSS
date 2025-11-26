@@ -3,23 +3,33 @@
 namespace Database\Seeders;
 
 use App\Models\User;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+use Spatie\Permission\Models\Role; // Import Role Spatie
 
 class DatabaseSeeder extends Seeder
 {
-    use WithoutModelEvents;
-
-    /**
-     * Seed the application's database.
-     */
     public function run(): void
     {
-        // User::factory(10)->create();
+        // 1. Buat Role
+        $roleAdmin = Role::create(['name' => 'Admin']);
+        $roleTS = Role::create(['name' => 'TS']);
 
-        User::factory()->create([
-            'name' => 'Test User',
-            'email' => 'test@example.com',
+        // 2. Buat Akun Admin
+        $admin = User::create([
+            'name' => 'Sang Admin',
+            'email' => 'admin@gmail.com',
+            'password' => bcrypt('password123'), // password default
         ]);
+        // Assign role admin ke user ini
+        $admin->assignRole($roleAdmin);
+
+        // 3. Buat Akun User Biasa
+        $TS = User::create([
+            'name' => 'User Biasa',
+            'email' => 'user@gmail.com',
+            'password' => bcrypt('password123'),
+        ]);
+        // Assign role user ke user ini
+        $TS->assignRole($roleTS);
     }
 }

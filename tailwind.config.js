@@ -1,16 +1,21 @@
-module.exports = {
-  content: ["./src/views/**/*.{html,js}"],
-  theme: {
-    screens: {
-      sm: { max: "639px" },
+import defaultTheme from 'tailwindcss/defaultTheme';
+import forms from '@tailwindcss/forms';
 
-      md: { max: "767px" },
+/** @type {import('tailwindcss').Config} */
+export default {
+    content: [
+        './vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php',
+        './storage/framework/views/*.php',
+        './resources/views/**/*.blade.php',
+    ],
 
-      lg: { max: "1023px" },
-
-      xl: { max: "1279px" },
+    theme: {
+        extend: {
+            fontFamily: {
+                sans: ['Figtree', ...defaultTheme.fontFamily.sans],
+            },
+        },
     },
-    extend: {},
-  },
-  plugins: [],
+
+    plugins: [forms],
 };
