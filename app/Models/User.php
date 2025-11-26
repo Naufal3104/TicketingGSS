@@ -19,8 +19,14 @@ class User extends Authenticatable
      * @var list<string>
      */
     protected $fillable = [
+        'user_id',
+        'username',
         'name',
+        'full_name',
         'email',
+        'phone_number',
+        'telegram_chat_id',
+        'is_active',
         'password',
     ];
 
@@ -44,6 +50,34 @@ class User extends Authenticatable
         return [
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
+            'is_active' => 'boolean',
         ];
+    }
+
+    // Relationships
+
+    public function visitAssignments()
+    {
+        return $this->hasMany(VisitAssignment::class, 'ts_id', 'user_id');
+    }
+
+    public function visitDocuments()
+    {
+        return $this->hasMany(VisitDocument::class, 'uploader_id', 'user_id');
+    }
+
+    public function invoices()
+    {
+        return $this->hasMany(Invoice::class, 'sales_id', 'user_id');
+    }
+
+    public function kpiMonthly()
+    {
+        return $this->hasMany(EmployeeKpiMonthly::class, 'user_id', 'user_id');
+    }
+
+    public function visitTickets()
+    {
+        return $this->hasMany(VisitTicket::class, 'created_by', 'user_id');
     }
 }

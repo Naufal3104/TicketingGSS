@@ -1,0 +1,194 @@
+Rencana Sprint & Backlog Penugasan - GSS Ticketing & Monev System
+
+Referensi Dokumen: SRS GSS 3.pdf
+
+Total Sprint: 4 Minggu (Target MVP)
+
+Tech Stack Utama: Laravel (Backend/Web), MySQL, n8n (Automation), WhatsApp API, Telegram Bot API.
+
+🗓️ SPRINT 1: Fondasi Sistem & Manajemen Data Master
+
+Fokus: Setup infrastruktur, Database awal, Manajemen User, dan Integrasi dasar WhatsApp untuk registrasi.
+
+1. Backend & Database (Laravel)
+   TODO
+   [ ] Setup Project: Inisialisasi Project Laravel, Setup Git Repository, Config .env.
+   [x] DB Schema: Membuat Migration untuk tabel users, user_roles, dan customers (Sesuai Bab 3.1).
+   [ ] Auth System: Implementasi Login/Logout dengan Role (Admin/CS, TS, Sales).
+   [ ] API Endpoint: Membuat API untuk menerima webhook dari n8n (Registrasi Customer).
+   [ ] CRUD User (MDM-003): - [ ] Fungsi Create User (TS/CS) dengan password hashing.
+   [ ] Fungsi Edit & Non-aktifkan User.
+
+2. Frontend (Web Dashboard)
+
+[ ] Layouting: Setup Template Dashboard (Sidebar, Header, Footer).
+[ ] Page Login: Halaman login responsive.
+[ ] Page User Management: Grid/List view user & Form tambah user.
+[ ] Page Customer Management (MDM-002):
+[ ] Form input manual Customer.
+[ ] List view data Customer (Filter & Search).
+
+3. Automation (n8n & WA)
+
+[ ] MDM-001 (Registrasi Auto):
+[ ] Setup n8n Webhook untuk menerima pesan masuk WA.
+[ ] Logic validasi format pesan (Nama#NoHP#Alamat).
+[ ] Integrasi simpan data ke Database via API Laravel.
+[ ] Reply otomatis WA (Sukses/Gagal).
+
+🗓️ SPRINT 2: Ticketing Core & FCFS Allocation
+
+Fokus: Pembuatan tiket, Logika "Rebutan" (Bidding/FCFS), dan Integrasi Notifikasi Telegram.
+
+1. Backend & Database
+
+[x] DB Schema: Migration tabel visit_tickets dan visit_assignments.
+[ ] Ticket Logic (PJV-001):
+[ ] Fungsi pengecekan kuota ketersediaan TS.
+[ ] Create Ticket logic.
+[ ] FCFS Logic (PJV-002) - CRITICAL:
+[ ] Implementasi DB Transaction Locking (lockForUpdate) untuk mencegah race condition saat TS mengambil job.
+[ ] Logic validasi: Satu TS tidak boleh ambil job di jam yang bentrok.
+
+2. Frontend (CS & TS View)
+
+[ ] Page Create Ticket: Form untuk CS memilih Customer & set Kuota.
+[ ] Dashboard TS (Mobile View):
+[ ] Tab "Open Pool" (Job tersedia).
+[ ] Tab "My Jobs" (Job yang sudah diambil).
+[ ] Tombol "Ambil Job" dengan handling error jika kalah cepat.
+
+3. Automation (Telegram Bot)
+
+[ ] Bot Setup: Register BotFather, ambil Token, set Webhook.
+[ ] Notifikasi Broadcast:
+[ ] Trigger n8n saat Tiket dibuat -> Kirim pesan ke Group Telegram TS.
+[ ] Trigger saat Job diambil -> Update pesan di Telegram (opsional) atau notif ke CS.
+
+🗓️ SPRINT 3: Eksekusi Visitasi & Emergency Handling
+
+Fokus: Aktivitas lapangan TS, GPS, Upload Dokumen, dan Logika Darurat.
+
+1. Backend & Database
+
+[x] DB Schema: Migration tabel visit_documents dan visit_attendances.
+[ ] Attendance Logic (EKD-001):
+[ ] API Check-in (Capture Timestamp & Geo-location).
+[ ] API Check-out.
+[ ] API Request Extension (Tambah Hari).
+[ ] Document Logic (PJV-003):
+[ ] Upload Handler (Surat Tugas, BAST, Foto Bukti).
+[ ] Storage setup (Local/S3/MinIO).
+[ ] Emergency Logic (EKD-002):
+[ ] Scheduled Task (Cron Job) untuk cek tiket yang belum ada Check-in saat jam kunjungan tiba.
+
+2. Frontend (Web App)
+
+[ ] Page Visit Detail (TS View):
+[ ] Tombol Check-in/Check-out (Hanya aktif sesuai status).
+[ ] Upload Form untuk BAST (PDF/Image).
+[ ] Download button untuk Surat Tugas.
+[ ] Dashboard Monitoring (CS View):
+[ ] Indikator status TS (On-site, Completed, Late).
+[ ] Alert Emergency jika ada keterlambatan.
+
+3. Automation
+
+[ ] Alert Emergency: Kirim notifikasi "ACTION REQUIRED" ke Telegram CS jika Cron Job mendeteksi keterlambatan check-in.
+
+🗓️ SPRINT 4: Invoicing, Rating & Finalisasi
+
+Fokus: Alur Penagihan, Feedback Customer, UAT, dan Deployment.
+
+1. Backend & Database
+
+[x] DB Schema: Migration tabel invoices dan customer_feedback.
+[ ] Invoicing (FIN-001):
+[ ] Generate Invoice ID (INV-YYYYMM-XXX).
+[ ] Kalkulasi Total (Base Price - Discount).
+[ ] Update Status Payment.
+[ ] Feedback Logic (FDB-001):
+[ ] API untuk menerima input rating dari form eksternal/n8n.
+[ ] Trigger update status tiket ke "CLOSED" setelah lunas/rating masuk.
+
+2. Frontend
+
+[ ] Page Invoicing (CS): Form input nominal & diskon, pilih Sales untuk approval.
+[ ] Sales View: Halaman simple untuk Approve/Reject harga (bisa juga via Telegram WebApp jika memungkinkan, tapi MVP Web dulu).
+[ ] Report Dashboard: Rekap rating rata-rata TS.
+
+3. Automation (n8n)
+
+[ ] Sales Approval: Notif ke Telegram Sales saat Draft Invoice dibuat.
+[ ] Kirim Invoice: Kirim PDF/Link Invoice ke WA Customer setelah Approved.
+[ ] Rating Loop:
+[ ] Trigger saat tiket "COMPLETED".
+[ ] Kirim Link Rating ke WA Customer.
+[ ] Terima webhook input rating -> Simpan ke DB.
+
+4. Deployment & Testing
+
+[ ] UAT (User Acceptance Testing): Simulasi full cycle dari Chat WA masuk sampai Rating.
+[ ] Server Setup: Deploy ke Cloud (VPS/Hosting), Setup Domain/SSL.
+[ ] Training: Sesi demo ke CS dan TS.
+
+<!-- CONTROLLERS -->
+
+1. Authentication & User Management (Sprint 1)
+    - AuthController (Existing/Modified): Handling Login, Logout, and Reset Password.
+    - UserController: CRUD for internal users (Admin, CS, TS, Sales).
+   ProfileController (Existing): For users to update their own profile/password.
+
+2. Master Data Management (Sprint 1)
+    - CustomerController: CRUD for Customer data, view history, and manual input.
+    - WebhookController: Specifically to handle incoming data from n8n (e.g., Auto-registration from WhatsApp).
+
+3. Ticketing Core (Sprint 2)
+   - TicketController:
+        CS: Create & Edit Tickets.
+        All: View Ticket details & status.
+   - AssignmentController:
+        Critical: Handles the "Rebutan" (FCFS) logic.
+        TS: takeJob(), listOpenJobs(), listMyJobs().
+   - DashboardController:
+        To handle the logic of displaying different stats/views based on the logged-in user's role (Admin vs CS vs TS).
+
+4. Field Operations (Sprint 3)
+    - AttendanceController:
+        TS: Check-in (Geo-tagging), Check-out.
+        CS: Monitor TS status.
+    - DocumentController:
+        Handle uploads for BAST, Evidence Photos, and generating/downloading Surat Tugas.
+    - EmergencyController (Optional/Merged):
+        Could be a separate controller if the logic for "Emergency Handling" is complex, or part of AttendanceController.
+
+5. Finance & Feedback (Sprint 4)
+    - InvoiceController:
+        CS: Create Draft Invoice.
+        Sales: Approve/Reject Invoice.
+        System: Generate PDF/View Invoice.
+    - FeedbackController:
+        Handle input ratings from Customers (via Webhook or Form).
+    - ReportController:
+        Recap TS performance (Ratings, On-time performance).
+
+
+app/Http/Controllers/
+├── Auth/
+│   └── AuthController.php
+├── Admin/
+│   ├── UserController.php
+│   └── ReportController.php
+├── Operational/
+│   ├── TicketController.php
+│   ├── AssignmentController.php
+│   ├── AttendanceController.php
+│   └── DocumentController.php
+├── Master/
+│   └── CustomerController.php
+├── Finance/
+│   └── InvoiceController.php
+├── Api/
+│   ├── WebhookController.php (For n8n)
+│   └── FeedbackController.php (If feedback is via public API)
+└── DashboardController.php

@@ -13,8 +13,15 @@ return new class extends Migration
     {
         Schema::create('users', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
-            $table->string('email')->unique();
+            $table->string('user_id', 20)->unique()->nullable(); // ERD: varchar(20)
+            // $table->string('role_id', 20)->nullable(); // ERD: varchar(20)
+            $table->string('username', 50)->unique()->nullable(); // ERD: varchar(50)
+            $table->string('name'); // Default Laravel
+            $table->string('full_name', 100)->nullable(); // ERD: varchar(100)
+            $table->string('email')->unique(); // Default Laravel
+            $table->string('phone_number', 20)->nullable(); // ERD: varchar(20)
+            $table->string('telegram_chat_id', 50)->nullable(); // ERD: varchar(50)
+            $table->boolean('is_active')->default(true); // ERD: tinyint(1)
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
             $table->rememberToken();
