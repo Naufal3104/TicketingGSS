@@ -16,7 +16,8 @@ class DatabaseSeeder extends Seeder
 
         // 2. Buat Akun Admin
         $admin = User::create([
-            'name' => 'Sang Admin',
+            'user_id' => 'admin001',
+            'name' => 'Admin',
             'email' => 'admin@gmail.com',
             'password' => bcrypt('password123'), // password default
         ]);
@@ -25,7 +26,8 @@ class DatabaseSeeder extends Seeder
 
         // 3. Buat Akun User Biasa
         $TS = User::create([
-            'name' => 'User Biasa',
+            'user_id' => 'user001',
+            'name' => 'User',
             'email' => 'user@gmail.com',
             'password' => bcrypt('password123'),
         ]);
