@@ -12,9 +12,7 @@ Route::get('/', function () {
     return view('dashboard-analytics');
 })->name('dashboard-analytics');
 
-Route::get('/report', function () {
-    return view('dashboard-ecommerce');
-})->name('dashboard-ecommerce');
+Route::get('/report', [App\Http\Controllers\Admin\ReportController::class, 'index'])->name('dashboard-ecommerce');
 
 Route::get('/calendar', function () {
     return view('ticketing');
@@ -44,6 +42,9 @@ Route::middleware('auth')->group(function () {
     // Documents
     Route::post('/documents/upload', [App\Http\Controllers\Operational\DocumentController::class, 'upload'])->name('documents.upload');
     Route::get('/documents/{ticket}/surat-tugas', [App\Http\Controllers\Operational\DocumentController::class, 'downloadSuratTugas'])->name('documents.surat-tugas');
+
+    // Finance - Invoicing
+    Route::resource('invoices', App\Http\Controllers\Finance\InvoiceController::class);
 
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');

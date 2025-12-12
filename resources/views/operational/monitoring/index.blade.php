@@ -130,9 +130,23 @@
                             @endif
                         </td>
                         <td>
-                            <a href="{{ route('assignments.show', $visit->visit_ticket_id) }}" class="btn btn-sm btn-icon btn-outline-secondary">
-                                <i class="bx bx-show"></i>
-                            </a>
+                            <div class="d-flex align-items-center gap-1">
+                                <a href="{{ route('assignments.show', $visit->visit_ticket_id) }}" class="btn btn-sm btn-icon btn-outline-secondary" title="View Detail">
+                                    <i class="bx bx-show"></i>
+                                </a>
+
+                                @if($visit->status == 'COMPLETED')
+                                @if($visit->invoice)
+                                <a href="{{ route('invoices.show', $visit->invoice->invoice_id) }}" class="btn btn-sm btn-icon btn-outline-success" title="View Invoice">
+                                    <i class="bx bx-file"></i>
+                                </a>
+                                @else
+                                <a href="{{ route('invoices.create', ['ticket_id' => $visit->visit_ticket_id]) }}" class="btn btn-sm btn-icon btn-outline-primary" title="Create Invoice">
+                                    <i class="bx bx-money"></i>
+                                </a>
+                                @endif
+                                @endif
+                            </div>
                         </td>
                     </tr>
                     @empty

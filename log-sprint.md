@@ -151,3 +151,82 @@ Implemented the operational logic for Visitation (Attendance, Documents) and Eme
 -   `resources/views/operational/monitoring/index.blade.php`
 -   `routes/web.php`
 -   `routes/console.php`
+
+# Sprint 4: Invoicing, Rating & Finalisasi
+
+**Date**: 2025-12-12
+**Status**: Completed (Backend, Frontend & Automation Templates)
+
+## Summary of Changes
+
+### 1. Backend & Database (Invoicing & Feedback)
+
+Implemented the Finance module and Feedback loop.
+
+#### Invoicing (FIN-001)
+
+-   **Controller**: `InvoiceController`
+-   **Features**:
+    -   Generate Invoice ID (`INV-YYYYMM-RAND`).
+    -   Calculate Base vs Discount.
+    -   Status Management (DRAFT -> SENT -> PAID).
+    -   Prevent Duplicate Invoices per Ticket.
+
+#### Feedback (FDB-001)
+
+-   **Controller**: `Api\FeedbackController`
+-   **Features**:
+    -   API Endpoint `POST /api/feedback` for receiving ratings.
+    -   Auto-update Ticket Status to `ARCHIVED` upon feedback.
+
+#### Reporting
+
+-   **Controller**: `Admin\ReportController`
+-   **Features**: Aggregates TS ratings and counts reviews.
+
+### 2. Frontend Implementation
+
+#### Invoicing UI
+
+-   **Create Invoice**: `resources/views/finance/invoices/create.blade.php`.
+-   **View Invoice**: `resources/views/finance/invoices/show.blade.php` (Printable Layout).
+-   **Integration**: Added "Create/View Invoice" button in `Monitoring Dashboard` (CS View).
+
+#### Report Dashboard
+
+-   **View**: `resources/views/admin/reports/index.blade.php`.
+-   **Features**: Table showing Technician Name, Total Reviews, Avg Rating, and Performance Badge.
+
+### 3. Automation (n8n)
+
+-   Created logic templates for:
+    -   Sending Invoices via WA.
+    -   Requesting Feedback via WA.
+    -   Receiving Feedback via Webhook.
+
+## Verification Walkthrough
+
+1.  **CS: Create Invoice**
+
+    -   Go to Monitoring -> Click "Create Invoice" on Completed Ticket.
+    -   Input Amount -> Draft Created.
+    -   Click "Update Status" to PAID -> Status Updated.
+
+2.  **System: Feedback**
+
+    -   Send POST request to `/api/feedback`.
+    -   Verify Ticket Status changes to `ARCHIVED`.
+
+3.  **Admin: Report**
+    -   Go to `/report`.
+    -   See performance stats of TS.
+
+## Files Modified/Created
+
+-   `app/Http/Controllers/Finance/InvoiceController.php`
+-   `app/Http/Controllers/Api/FeedbackController.php`
+-   `app/Http/Controllers/Admin/ReportController.php`
+-   `resources/views/finance/invoices/*`
+-   `resources/views/admin/reports/index.blade.php`
+-   `routes/web.php`
+-   `routes/api.php`

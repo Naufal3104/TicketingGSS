@@ -103,28 +103,28 @@ Fokus: Alur Penagihan, Feedback Customer, UAT, dan Deployment.
 1. Backend & Database
 
 [x] DB Schema: Migration tabel invoices dan customer_feedback.
-[ ] Invoicing (FIN-001):
-[ ] Generate Invoice ID (INV-YYYYMM-XXX).
-[ ] Kalkulasi Total (Base Price - Discount).
-[ ] Update Status Payment.
-[ ] Feedback Logic (FDB-001):
-[ ] API untuk menerima input rating dari form eksternal/n8n.
-[ ] Trigger update status tiket ke "CLOSED" setelah lunas/rating masuk.
+[x] Invoicing (FIN-001):
+[x] Generate Invoice ID (INV-YYYYMM-XXX).
+[x] Kalkulasi Total (Base Price - Discount).
+[x] Update Status Payment.
+[x] Feedback Logic (FDB-001):
+[x] API untuk menerima input rating dari form eksternal/n8n.
+[x] Trigger update status tiket ke "CLOSED" setelah lunas/rating masuk.
 
 2. Frontend
 
-[ ] Page Invoicing (CS): Form input nominal & diskon, pilih Sales untuk approval.
-[ ] Sales View: Halaman simple untuk Approve/Reject harga (bisa juga via Telegram WebApp jika memungkinkan, tapi MVP Web dulu).
-[ ] Report Dashboard: Rekap rating rata-rata TS.
+[x] Page Invoicing (CS): Form input nominal & diskon, pilih Sales untuk approval.
+[x] Sales View: Halaman simple untuk Approve/Reject harga (bisa juga via Telegram WebApp jika memungkinkan, tapi MVP Web dulu).
+[x] Report Dashboard: Rekap rating rata-rata TS.
 
 3. Automation (n8n)
 
-[ ] Sales Approval: Notif ke Telegram Sales saat Draft Invoice dibuat.
-[ ] Kirim Invoice: Kirim PDF/Link Invoice ke WA Customer setelah Approved.
-[ ] Rating Loop:
-[ ] Trigger saat tiket "COMPLETED".
-[ ] Kirim Link Rating ke WA Customer.
-[ ] Terima webhook input rating -> Simpan ke DB.
+[x] Sales Approval: Notif ke Telegram Sales saat Draft Invoice dibuat.
+[x] Kirim Invoice: Kirim PDF/Link Invoice ke WA Customer setelah Approved.
+[x] Rating Loop:
+[x] Trigger saat tiket "COMPLETED".
+[x] Kirim Link Rating ke WA Customer.
+[x] Terima webhook input rating -> Simpan ke DB.
 
 4. Deployment & Testing
 
@@ -195,3 +195,31 @@ app/Http/Controllers/
 │ ├── WebhookController.php (For n8n)
 │ └── FeedbackController.php (If feedback is via public API)
 └── DashboardController.php
+
+## 📝 Pending Tasks Summary (Auto-Generated 2024-12-12)
+
+### 📌 From Project Roadmap (todo-strux):
+
+**Sprint 1: Automation**
+
+-   [ ] **MDM-001 (Registrasi Auto)**: Setup n8n Webhook, Logic Validasi, Integrasi DB, Reply WA.
+
+**Sprint 2: Telegram Bot**
+
+-   [ ] **Bot Setup**: Register BotFather, Token, Webhook.
+-   [ ] **Notifikasi Broadcast**: Trigger n8n saat Tiket dibuat & saat Job diambil.
+
+**Sprint 3: Field Ops**
+
+-   [ ] **API Request Extension**: Endpoint untuk request tambah hari kunjungan.
+
+**Sprint 4: Deployment & Finalization**
+
+-   [ ] **UAT**: Simulasi full cycle dari WA sampai Rating.
+-   [ ] **Server Setup**: Deploy ke Cloud (VPS/Hosting), Domain/SSL.
+-   [ ] **Training**: Sesi demo ke user.
+
+### 💻 Codebase Technical Debt (TODOs):
+
+-   [ ] **InvoiceController.php**: Implement `index` method (List invoices).
+-   [ ] **TicketController.php**: Implement `index` method (List tickets logic based on role).

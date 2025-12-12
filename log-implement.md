@@ -68,15 +68,16 @@ We will use standard Blade templates extending the existing layout (likely `layo
 -   TS can see the list of open tickets.
 -   TS can click "Ambil Ticket" and it moves to "My Jobs".
 
-# Sprint 3: Full Implementation Report
+# Sprint 4: Full Implementation Report
 
 ## Done vs Planned
 
--   **Backend**: 100% Complete (Migrations, Controllers, Cron).
--   **Frontend TS**: 100% Complete (`assignments.show` with Geo Checkin/Upload).
--   **Frontend CS**: 100% Complete (`monitoring.index`).
+-   **Backend**: 100% Complete (Invoicing, Feedback, Reports).
+-   **Frontend**: 100% Complete (Invoice Create/Show, Report Dashboard).
+-   **Automation**: Templates Created (n8n JSON/Logic).
 
-## Next Steps (Sprint 4)
+## Next Steps (MVP Launch)
 
--   **Invoicing**: Finance module.
--   **Rating**: Customer Feedback.
+-   **Deploy**: Setup VPS / Hosting.
+-   **Training**: User Training for CS/TS.
+-   **UAT**: Full Cycle Testing.

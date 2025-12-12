@@ -17,7 +17,7 @@ class MonitoringController extends Controller
         // Get visits scheduled for TODAY
         $today = Carbon::today()->toDateString();
 
-        $todaysVisits = VisitTicket::with(['customer', 'assignment.ts'])
+        $todaysVisits = VisitTicket::with(['customer', 'assignment.ts', 'invoice'])
             ->whereDate('visit_date', $today)
             ->orderBy('visit_time', 'asc')
             ->get();
