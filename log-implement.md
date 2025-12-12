@@ -81,3 +81,28 @@ We will use standard Blade templates extending the existing layout (likely `layo
 -   **Deploy**: Setup VPS / Hosting.
 -   **Training**: User Training for CS/TS.
 -   **UAT**: Full Cycle Testing.
+
+# Technical Debt Implementation
+
+## 1. Invoice List
+
+-   **Method**: `InvoiceController@index`
+-   **Logic**: Fetch all invoices ordered by `created_at` DESC. Paginate 10.
+-   **View**: `finance.invoices.index` (Needs creation, returned view).
+
+## 2. General Ticket List
+
+-   **Method**: `TicketController@index`
+-   **Logic**:
+    -   TS: View tickets assigned to them.
+    -   CS/Admin: View all.
+-   **View**: `operational.tickets.index` (Needs creation).
+
+## 3. Extension Request
+
+-   **Method**: `AttendanceController@requestExtension`
+-   **Logic**: Mock success response. In future, create `VisitExtension` record.
+
+## 4. Webhook Triggers
+
+-   **Logic**: Added `Log::info` in `store` and `takeJob` to simulate n8n triggers.

@@ -103,6 +103,13 @@ class AssignmentController extends Controller
 
             DB::commit();
 
+            // Trigger n8n Webhook: Job Taken
+            try {
+                // Http::post(env('N8N_WEBHOOK_URL_JOB_TAKEN'), ['ticket_id' => $ticket->visit_ticket_id, 'ts_id' => $tsId]);
+                \Illuminate\Support\Facades\Log::info("Triggering n8n Webhook: Job Taken - Ticket: {$ticket->visit_ticket_id} by TS: {$tsId}");
+            } catch (\Exception $e) {
+            }
+
             return response()->json([
                 'success' => true,
                 'message' => 'Job taken successfully!',

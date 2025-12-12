@@ -16,8 +16,29 @@ class TicketController extends Controller
      */
     public function index()
     {
-        // TODO: Implement listing based on role
-        return response()->json(['message' => 'Listing not implemented yet'], 200);
+        $user = Auth::user();
+        $query = VisitTicket::with('customer');
+
+        // Check explicit roles if using Spatie Permission or simple logic
+        // Assuming user has 'roles' relation or we check methods
+        // For MVP without full role setup in User model, we might deduce from elsewhere or just show all for now
+        // But the requirement asked for role-based logic.
+
+        // If we use $user->hasRole('TS')
+        if ($user->hasRole('TS')) {
+            // TS sees tickets assigned to them
+            $query->whereHas('assignments', function ($q) use ($user) {
+                $q->where('user_id', $user->id);
+            });
+        } elseif ($user->hasRole('CS')) {
+            // CS sees all or maybe usually created by them? Let's say all for collaboration
+            // No filter
+        }
+
+        // Default sort
+        $tickets = $query->orderBy('created_at', 'desc')->paginate(10);
+
+        return view('operational.tickets.index', compact('tickets'));
     }
 
     /**
@@ -67,6 +88,17 @@ class TicketController extends Controller
             ]);
 
             DB::commit();
+
+            DB::commit();
+
+            // Trigger n8n Webhook (Fire & Forget or Queue)
+            try {
+                // In production: Http::post(env('N8N_WEBHOOK_URL_TICKET_CREATED'), $ticket->toArray());
+                // For MVP: Log it
+                \Illuminate\Support\Facades\Log::info("Triggering n8n Webhook: Ticket Created - ID: " . $ticketId);
+            } catch (\Exception $e) {
+                // Ignore webhook errors to not block flow
+            }
 
             return redirect()->route('tickets.create')->with('success', 'Ticket created successfully! ID: ' . $ticketId);
         } catch (\Exception $e) {

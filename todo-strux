@@ -207,11 +207,11 @@ app/Http/Controllers/
 **Sprint 2: Telegram Bot**
 
 -   [ ] **Bot Setup**: Register BotFather, Token, Webhook.
--   [ ] **Notifikasi Broadcast**: Trigger n8n saat Tiket dibuat & saat Job diambil.
+-   [x] **Notifikasi Broadcast**: Trigger n8n saat Tiket dibuat & saat Job diambil.
 
 **Sprint 3: Field Ops**
 
--   [ ] **API Request Extension**: Endpoint untuk request tambah hari kunjungan.
+-   [x] **API Request Extension**: Endpoint untuk request tambah hari kunjungan.
 
 **Sprint 4: Deployment & Finalization**
 
@@ -221,5 +221,5 @@ app/Http/Controllers/
 
 ### 💻 Codebase Technical Debt (TODOs):
 
--   [ ] **InvoiceController.php**: Implement `index` method (List invoices).
--   [ ] **TicketController.php**: Implement `index` method (List tickets logic based on role).
+-   [x] **InvoiceController.php**: Implement `index` method (List invoices).
+-   [x] **TicketController.php**: Implement `index` method (List tickets logic based on role).

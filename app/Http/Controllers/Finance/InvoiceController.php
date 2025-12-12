@@ -18,7 +18,11 @@ class InvoiceController extends Controller
      */
     public function index()
     {
-        // TODO: List invoices if needed
+        $invoices = Invoice::with(['ticket.customer', 'sales'])
+            ->orderBy('created_at', 'desc')
+            ->paginate(10);
+
+        return view('finance.invoices.index', compact('invoices'));
     }
 
     /**

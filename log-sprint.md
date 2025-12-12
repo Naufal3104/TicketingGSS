@@ -230,3 +230,26 @@ Implemented the Finance module and Feedback loop.
 -   `resources/views/admin/reports/index.blade.php`
 -   `routes/web.php`
 -   `routes/api.php`
+
+# Technical Debt & Pending Tasks Cleanup
+
+**Date**: 2025-12-12
+**Status**: Addressed
+
+## Summary of Changes
+
+### 1. Technical Debt Resolution
+-   **InvoiceController**: Implemented `index()` method to list invoices with pagination.
+-   **TicketController**: Implemented `index()` method with rudimentary role-based filtering (TS sees assigned, others see all).
+
+### 2. Field Ops Enhancements (Sprint 3 Pending)
+-   **API Extension**: Added `requestExtension` method in `AttendanceController` to handle requests for additional visitation days.
+
+### 3. Automation Implementation (Sprint 2 Pending)
+-   **Notification Triggers**: Added logic in `TicketController::store` and `AssignmentController::takeJob` to log/trigger n8n webhooks (Mock implementation for MVP).
+
+## Files Modified
+-   `app/Http/Controllers/Finance/InvoiceController.php`
+-   `app/Http/Controllers/Operational/TicketController.php`
+-   `app/Http/Controllers/Operational/AttendanceController.php`
+-   `app/Http/Controllers/Operational/AssignmentController.php`

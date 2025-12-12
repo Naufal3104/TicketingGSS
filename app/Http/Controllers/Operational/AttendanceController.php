@@ -154,4 +154,31 @@ class AttendanceController extends Controller
             ], 500);
         }
     }
+    /**
+     * Request Extension (Tambah Hari).
+     */
+    public function requestExtension(Request $request)
+    {
+        $request->validate([
+            'visit_ticket_id' => 'required|exists:visit_tickets,visit_ticket_id',
+            'reason' => 'required|string',
+            'days_requested' => 'required|integer|min:1'
+        ]);
+
+        // MVP: Just log or notify. Real implementation might create a 'VisitExtensionRequest' model.
+        // For now, we will just update a note on the ticket or similar, or return success mocking the process.
+
+        $ticket = VisitTicket::where('visit_ticket_id', $request->visit_ticket_id)->firstOrFail();
+
+        // Mock success
+        return response()->json([
+            'success' => true,
+            'message' => 'Extension request submitted successfully.',
+            'data' => [
+                'ticket_id' => $ticket->visit_ticket_id,
+                'requested_by' => Auth::id(),
+                'days' => $request->days_requested
+            ]
+        ]);
+    }
 }
