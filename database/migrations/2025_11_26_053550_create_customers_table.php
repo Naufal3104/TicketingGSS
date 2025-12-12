@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('customers', function (Blueprint $table) {
             // ERD: customer_id varchar(20) PK
             $table->string('customer_id', 20)->primary();
+            $table->string('instance')->nullable();
             $table->string('customer_name', 100);
             $table->string('phone_number', 20)->nullable();
             $table->string('email', 100)->nullable();
