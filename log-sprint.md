@@ -78,3 +78,76 @@ Implemented the user interfaces for CS to create tickets and for TS to view/take
 -   `resources/views/operational/tickets/create.blade.php` (New)
 -   `resources/views/operational/assignments/index.blade.php` (New)
 -   `routes/web.php`
+
+# Sprint 3: Eksekusi Visitasi & Emergency Handling
+
+**Date**: 2025-12-12
+**Status**: Completed (Backend & Frontend)
+
+## Summary of Changes
+
+### 1. Backend & Database (Point 1)
+
+Implemented the operational logic for Visitation (Attendance, Documents) and Emergency Handling.
+
+#### Database & Models
+
+-   **Attandance**: Added `check_in/out` logic with Geolocation.
+-   **Documents**: Configured uploads for `visit_documents`.
+-   **Scheduling**: Added `visit_date` and `visit_time` to `VisitTicket`.
+
+#### Controllers
+
+-   `AttendanceController`: Handles Check-in/out APIs.
+-   `DocumentController`: Handles File Uploads.
+-   `MonitoringController`: Aggregates data for CS Dashboard.
+
+#### Automation
+
+-   **Emergency Cron**: Scheduled task in `routes/console.php` scanning for Late Check-ins.
+
+### 2. Frontend Implementation (Point 2)
+
+#### TS View - Visit Detail
+
+-   **Route**: `GET /assignments/{ticket}`
+-   **File**: `resources/views/operational/assignments/show.blade.php`
+-   **Features**:
+    -   **Geolocation Check-in**: JS captures coordinates -> call API.
+    -   **Document Upload**: AJAX Form for BAST/Photos.
+    -   **Status Updates**: Real-time feedback after actions.
+
+#### CS View - Monitoring Dashboard
+
+-   **Route**: `GET /monitoring`
+-   **File**: `resources/views/operational/monitoring/index.blade.php`
+-   **Features**:
+    -   **Stats Cards**: Total, On-site, Completed, Pending.
+    -   **Live Table**: List of today's visits with "LATE CHECK-IN" alerts.
+
+## Verification Walkthrough
+
+1.  **TS: Start Activity**
+
+    -   Click Ticket in "My Jobs" -> Redirect to Detail.
+    -   Click "Check-in" -> Browser Permission Allow -> Status moves to "IN_PROGRESS".
+
+2.  **CS: Monitor**
+
+    -   Go to `/monitoring`.
+    -   See the ticket status change to "IN_PROGRESS".
+
+3.  **TS: Complete Activity**
+    -   Upload BAST (PDF) -> Success.
+    -   Click "Check-out" -> Status moves to "COMPLETED...".
+
+## Files Modified/Created
+
+-   `app/Http/Controllers/Operational/AttendanceController.php`
+-   `app/Http/Controllers/Operational/DocumentController.php`
+-   `app/Http/Controllers/Operational/AssignmentController.php` (Updated)
+-   `app/Http/Controllers/Operational/MonitoringController.php`
+-   `resources/views/operational/assignments/show.blade.php`
+-   `resources/views/operational/monitoring/index.blade.php`
+-   `routes/web.php`
+-   `routes/console.php`

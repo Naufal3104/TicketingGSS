@@ -34,6 +34,16 @@ Route::middleware('auth')->group(function () {
     Route::resource('tickets', TicketController::class);
     Route::get('/assignments/open', [AssignmentController::class, 'index'])->name('assignments.open');
     Route::post('/assignments/take', [AssignmentController::class, 'takeJob'])->name('assignments.take');
+    Route::get('/assignments/{ticket}', [AssignmentController::class, 'show'])->name('assignments.show');
+    Route::get('/monitoring', [App\Http\Controllers\Operational\MonitoringController::class, 'index'])->name('monitoring.index');
+
+    // Attendance
+    Route::post('/attendance/check-in', [App\Http\Controllers\Operational\AttendanceController::class, 'checkIn'])->name('attendance.checkIn');
+    Route::post('/attendance/check-out', [App\Http\Controllers\Operational\AttendanceController::class, 'checkOut'])->name('attendance.checkOut');
+
+    // Documents
+    Route::post('/documents/upload', [App\Http\Controllers\Operational\DocumentController::class, 'upload'])->name('documents.upload');
+    Route::get('/documents/{ticket}/surat-tugas', [App\Http\Controllers\Operational\DocumentController::class, 'downloadSuratTugas'])->name('documents.surat-tugas');
 
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');

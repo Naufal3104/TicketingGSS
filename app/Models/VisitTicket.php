@@ -30,6 +30,8 @@ class VisitTicket extends Model
         'priority_level',
         'ts_quota_needed',
         'status',
+        'visit_date',
+        'visit_time',
     ];
 
     public function customer()

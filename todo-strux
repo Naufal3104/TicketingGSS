@@ -72,29 +72,29 @@ Fokus: Aktivitas lapangan TS, GPS, Upload Dokumen, dan Logika Darurat.
 1. Backend & Database
 
 [x] DB Schema: Migration tabel visit_documents dan visit_attendances.
-[ ] Attendance Logic (EKD-001):
-[ ] API Check-in (Capture Timestamp & Geo-location).
-[ ] API Check-out.
+[x] Attendance Logic (EKD-001):
+[x] API Check-in (Capture Timestamp & Geo-location).
+[x] API Check-out.
 [ ] API Request Extension (Tambah Hari).
-[ ] Document Logic (PJV-003):
-[ ] Upload Handler (Surat Tugas, BAST, Foto Bukti).
-[ ] Storage setup (Local/S3/MinIO).
-[ ] Emergency Logic (EKD-002):
-[ ] Scheduled Task (Cron Job) untuk cek tiket yang belum ada Check-in saat jam kunjungan tiba.
+[x] Document Logic (PJV-003):
+[x] Upload Handler (Surat Tugas, BAST, Foto Bukti).
+[x] Storage setup (Local/S3/MinIO).
+[x] Emergency Logic (EKD-002):
+[x] Scheduled Task (Cron Job) untuk cek tiket yang belum ada Check-in saat jam kunjungan tiba.
 
 2. Frontend (Web App)
 
-[ ] Page Visit Detail (TS View):
-[ ] Tombol Check-in/Check-out (Hanya aktif sesuai status).
-[ ] Upload Form untuk BAST (PDF/Image).
-[ ] Download button untuk Surat Tugas.
-[ ] Dashboard Monitoring (CS View):
-[ ] Indikator status TS (On-site, Completed, Late).
-[ ] Alert Emergency jika ada keterlambatan.
+[x] Page Visit Detail (TS View):
+[x] Tombol Check-in/Check-out (Hanya aktif sesuai status).
+[x] Upload Form untuk BAST (PDF/Image).
+[x] Download button untuk Surat Tugas.
+[x] Dashboard Monitoring (CS View):
+[x] Indikator status TS (On-site, Completed, Late).
+[x] Alert Emergency jika ada keterlambatan.
 
-3. Automation
+3.  Automation
 
-[ ] Alert Emergency: Kirim notifikasi "ACTION REQUIRED" ke Telegram CS jika Cron Job mendeteksi keterlambatan check-in.
+[x] Alert Emergency: Kirim notifikasi "ACTION REQUIRED" ke Telegram CS jika Cron Job mendeteksi keterlambatan check-in.
 
 🗓️ SPRINT 4: Invoicing, Rating & Finalisasi
 

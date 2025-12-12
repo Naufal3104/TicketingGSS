@@ -117,9 +117,28 @@ class AssignmentController extends Controller
         }
     }
 
-    // Standard resource methods...
-    public function show(VisitAssignment $visitAssignment)
+    /**
+     * Display the specified assignment (Job Detail).
+     * Using Ticket ID for simpler URL context.
+     */
+    public function show($ticketId)
     {
-        //
+        $ticket = VisitTicket::with(['customer', 'assignment', 'documents', 'creator'])
+            ->where('visit_ticket_id', $ticketId)
+            ->firstOrFail();
+
+        // Security check: Is this TS assigned?
+        // Or is it a CS viewing? For now, if TS, check assignment.
+        $user = Auth::user();
+
+        // Simple check for TS role (adjust based on actual Role implementation)
+        // Assuming we rely on the existence of an assignment for this user
+        if ($user->hasRole('technician')) { // specific role check if avaiable, else check assignment
+            if ($ticket->assignment && $ticket->assignment->ts_id !== $user->id) {
+                abort(403, 'Unauthorized access to this assignment.');
+            }
+        }
+
+        return view('operational.assignments.show', compact('ticket'));
     }
 }
