@@ -4,6 +4,8 @@ use App\Http\Controllers\CalendarController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Master\CustomerController;
 use App\Http\Controllers\Admin\UserController;
+use App\Http\Controllers\Operational\TicketController;
+use App\Http\Controllers\Operational\AssignmentController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -27,6 +29,12 @@ Route::get('/dashboard', function () {
 
 Route::middleware('auth')->group(function () {
     Route::resource('users', UserController::class);
+
+    // Operational Routes
+    Route::resource('tickets', TicketController::class);
+    Route::get('/assignments/open', [AssignmentController::class, 'index'])->name('assignments.open');
+    Route::post('/assignments/take', [AssignmentController::class, 'takeJob'])->name('assignments.take');
+
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');

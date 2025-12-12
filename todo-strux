@@ -43,20 +43,20 @@ Fokus: Pembuatan tiket, Logika "Rebutan" (Bidding/FCFS), dan Integrasi Notifikas
 1. Backend & Database
 
 [x] DB Schema: Migration tabel visit_tickets dan visit_assignments.
-[ ] Ticket Logic (PJV-001):
-[ ] Fungsi pengecekan kuota ketersediaan TS.
-[ ] Create Ticket logic.
-[ ] FCFS Logic (PJV-002) - CRITICAL:
-[ ] Implementasi DB Transaction Locking (lockForUpdate) untuk mencegah race condition saat TS mengambil job.
-[ ] Logic validasi: Satu TS tidak boleh ambil job di jam yang bentrok.
+[x] Ticket Logic (PJV-001):
+[x] Fungsi pengecekan kuota ketersediaan TS.
+[x] Create Ticket logic.
+[x] FCFS Logic (PJV-002) - CRITICAL:
+[x] Implementasi DB Transaction Locking (lockForUpdate) untuk mencegah race condition saat TS mengambil job.
+[x] Logic validasi: Satu TS tidak boleh ambil job di jam yang bentrok.
 
 2. Frontend (CS & TS View)
 
-[ ] Page Create Ticket: Form untuk CS memilih Customer & set Kuota.
-[ ] Dashboard TS (Mobile View):
-[ ] Tab "Open Pool" (Job tersedia).
-[ ] Tab "My Jobs" (Job yang sudah diambil).
-[ ] Tombol "Ambil Job" dengan handling error jika kalah cepat.
+[x] Page Create Ticket: Form untuk CS memilih Customer & set Kuota.
+[x] Dashboard TS (Mobile View):
+[x] Tab "Open Pool" (Job tersedia).
+[x] Tab "My Jobs" (Job yang sudah diambil).
+[x] Tombol "Ambil Job" dengan handling error jika kalah cepat.
 
 3. Automation (Telegram Bot)
 

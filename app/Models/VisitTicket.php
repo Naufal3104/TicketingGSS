@@ -61,4 +61,9 @@ class VisitTicket extends Model
     {
         return $this->hasOne(CustomerFeedback::class, 'visit_ticket_id', 'visit_ticket_id');
     }
+
+    public function scopeOpen($query)
+    {
+        return $query->where('status', 'OPEN');
+    }
 }
