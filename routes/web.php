@@ -12,7 +12,7 @@ Route::get('/', function () {
     return view('dashboard-analytics');
 })->name('dashboard-analytics');
 
-Route::get('/report', [App\Http\Controllers\Admin\ReportController::class, 'index'])->name('dashboard-ecommerce');
+
 
 Route::get('/calendar', function () {
     return view('ticketing');
@@ -27,6 +27,7 @@ Route::get('/dashboard', function () {
 
 Route::middleware('auth')->group(function () {
     Route::resource('users', UserController::class);
+    Route::get('/report', [App\Http\Controllers\Admin\ReportController::class, 'index'])->name('dashboard-ecommerce');
 
     // Operational Routes
     Route::resource('tickets', TicketController::class);
