@@ -29,7 +29,7 @@ class CustomerController extends Controller
         $newNumber = $number + 1;
 
         // Format: CUST- diikuti 3 digit angka (str_pad menambahkan nol di depan)
-        return 'CUST-'.str_pad($newNumber, 3, '0', STR_PAD_LEFT);
+        return 'CUST-' . str_pad($newNumber, 3, '0', STR_PAD_LEFT);
     }
 
     public function index(Request $request)
@@ -38,8 +38,8 @@ class CustomerController extends Controller
         $query = Customer::query();
 
         if ($request->has('search')) {
-            $query->where('customer_name', 'ilike', '%'.$request->search.'%') // 'ilike' untuk case-insensitive di Postgres
-                ->orWhere('customer_id', 'ilike', '%'.$request->search.'%');
+            $query->where('customer_name', 'like', '%' . $request->search . '%')
+                ->orWhere('customer_id', 'like', '%' . $request->search . '%');
         }
 
         // Pagination 10 data per halaman
@@ -75,7 +75,7 @@ class CustomerController extends Controller
 
         Customer::create($request->all());
 
-        return redirect()->route('customers.index')->with('success', 'Data Customer berhasil disimpan dengan ID: '.$newId);
+        return redirect()->route('customers.index')->with('success', 'Data Customer berhasil disimpan dengan ID: ' . $newId);
     }
 
     // MENAMPILKAN FORM EDIT
@@ -91,7 +91,7 @@ class CustomerController extends Controller
     {
         $request->validate([
             // customer_id diabaikan dalam pengecekan unique karena sedang diedit milik sendiri
-            'customer_id' => 'required|string|max:20|unique:customers,customer_id,'.$id.',customer_id',
+            'customer_id' => 'required|string|max:20|unique:customers,customer_id,' . $id . ',customer_id',
             'customer_name' => 'required|string|max:100',
             'email' => 'nullable|email',
             'status' => 'required|in:ACTIVE,INACTIVE',
