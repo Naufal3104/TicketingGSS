@@ -13,15 +13,14 @@ return new class extends Migration
     {
         Schema::create('visit_documents', function (Blueprint $table) {
             $table->id('document_id'); // BigInt PK
-            
+
+            // FK to visit_tickets
             // FK to visit_tickets
             $table->string('visit_ticket_id', 20);
+            $table->string('uploader_id', 20); // Define column first
+
             $table->foreign('visit_ticket_id')->references('visit_ticket_id')->on('visit_tickets')->onDelete('cascade');
             $table->foreign('uploader_id')->references('user_id')->on('users')->onDelete('cascade');
-
-            // FK to users (Uploader)
-            $table->string('uploader_id', 20);
-            // $table->foreign('uploader_id')->references('user_id')->on('users');
 
             $table->enum('document_type', ['SURAT_TUGAS', 'SURAT_JALAN', 'BAST_SIGNED', 'EVIDENCE_PHOTO', 'OTHER']);
             $table->text('file_url');

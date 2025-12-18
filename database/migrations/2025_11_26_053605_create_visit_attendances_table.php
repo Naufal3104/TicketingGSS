@@ -13,7 +13,18 @@ return new class extends Migration
     {
         Schema::create('visit_attendances', function (Blueprint $table) {
             $table->id();
+            $table->string('visit_ticket_id', 20);
+            $table->string('user_id', 20); // TS
+            $table->timestamp('check_in_at')->nullable();
+            $table->decimal('check_in_lat', 10, 8)->nullable();
+            $table->decimal('check_in_long', 11, 8)->nullable();
+            $table->timestamp('check_out_at')->nullable();
+            $table->decimal('check_out_lat', 10, 8)->nullable();
+            $table->decimal('check_out_long', 11, 8)->nullable();
             $table->timestamps();
+
+            $table->foreign('visit_ticket_id')->references('visit_ticket_id')->on('visit_tickets')->onDelete('cascade');
+            $table->foreign('user_id')->references('user_id')->on('users')->onDelete('cascade');
         });
     }
 
