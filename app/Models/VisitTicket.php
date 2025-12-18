@@ -30,6 +30,8 @@ class VisitTicket extends Model
         'priority_level',
         'ts_quota_needed',
         'status',
+        'visit_date',
+        'visit_time',
     ];
 
     public function customer()
@@ -60,5 +62,10 @@ class VisitTicket extends Model
     public function feedback()
     {
         return $this->hasOne(CustomerFeedback::class, 'visit_ticket_id', 'visit_ticket_id');
+    }
+
+    public function scopeOpen($query)
+    {
+        return $query->where('status', 'OPEN');
     }
 }
