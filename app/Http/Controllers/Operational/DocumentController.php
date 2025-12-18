@@ -59,22 +59,8 @@ class DocumentController extends Controller
      */
     public function downloadSuratTugas($ticketId)
     {
-        $ticket = VisitTicket::findOrFail($ticketId);
+        $ticket = VisitTicket::with(['customer', 'assignment.ts'])->where('visit_ticket_id', $ticketId)->firstOrFail();
 
-        // In a real app, uses DomPDF to generate PDF.
-        // For MVP, we return a simple view or text.
-
-        $data = [
-            'ticket' => $ticket,
-            'user' => Auth::user(), // Requestor
-        ];
-
-        // Assuming we have a view 'documents.surat_tugas'
-        // return view('documents.surat_tugas', $data);
-
-        return response()->json([
-            'message' => 'Surat Tugas generation not implemented in MVP yet.',
-            'ticket' => $ticket->visit_ticket_id
-        ]);
+        return view('operational.documents.surat-tugas', compact('ticket'));
     }
 }

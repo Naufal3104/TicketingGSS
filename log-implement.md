@@ -106,3 +106,16 @@ We will use standard Blade templates extending the existing layout (likely `layo
 ## 4. Webhook Triggers
 
 -   **Logic**: Added `Log::info` in `store` and `takeJob` to simulate n8n triggers.
+
+# Final Gaps Implementation (Compliance Check)
+
+## 1. Surat Tugas (PJV-003)
+
+-   **Goal**: Replace Mock JSON with real Printable View.
+-   **File**: `resources/views/operational/documents/surat-tugas.blade.php`.
+-   **Controller**: `DocumentController@downloadSuratTugas` updated to return view.
+
+## 2. Notification Hooks (Finance)
+
+-   **Goal**: Ensure Automation (n8n) can be triggered for Invoices.
+-   **Implementation**: Added `Log::info` hooks in `InvoiceController` (Store & Update methods) to simulate external requests.

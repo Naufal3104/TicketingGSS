@@ -85,6 +85,8 @@ class InvoiceController extends Controller
 
             DB::commit();
 
+            \Illuminate\Support\Facades\Log::info("Triggering n8n Webhook: Invoice Draft Created - ID: {$invoice->invoice_id} for Sales Approval");
+
             return redirect()->route('invoices.show', $invoice->invoice_id)
                 ->with('success', 'Draft Invoice Created Successfully!');
         } catch (\Exception $e) {
@@ -121,9 +123,10 @@ class InvoiceController extends Controller
 
         $invoice->update([
             'status' => $request->status,
-            // Update paid_at if status becomes PAID
             'paid_at' => $request->status === 'PAID' ? now() : ($request->status === 'DRAFT' ? null : $invoice->paid_at),
         ]);
+
+        \Illuminate\Support\Facades\Log::info("Triggering n8n Webhook: Invoice Status Updated - ID: {$invoice->invoice_id} to {$request->status}. Notify Customer.");
 
         return back()->with('success', 'Invoice status updated to ' . $request->status);
     }
