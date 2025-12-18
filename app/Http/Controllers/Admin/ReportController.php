@@ -16,7 +16,7 @@ class ReportController extends Controller
         // Join Users (TS) with Tickets -> Feedback
 
         $tsRatings = DB::table('users')
-            ->join('visit_assignments', 'users.user_id', '=', 'visit_assignments.user_id')
+            ->join('visit_assignments', 'users.user_id', '=', 'visit_assignments.ts_id')
             ->join('visit_tickets', 'visit_assignments.visit_ticket_id', '=', 'visit_tickets.visit_ticket_id')
             ->join('customer_feedback', 'visit_tickets.visit_ticket_id', '=', 'customer_feedback.visit_ticket_id')
             ->select(
