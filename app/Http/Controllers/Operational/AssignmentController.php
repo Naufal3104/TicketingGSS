@@ -23,7 +23,7 @@ class AssignmentController extends Controller
 
         // 1. Open Tickets (Pool)
         $openTickets = VisitTicket::with('customer')
-            ->scopeOpen()
+            ->open()
             ->orderBy('priority_level', 'desc') // Urgent first
             ->orderBy('created_at', 'asc') // Oldest first
             ->get();

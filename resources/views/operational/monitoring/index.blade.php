@@ -1,157 +1,97 @@
-@extends('layouts.app')
-
-@section('title', 'Monitoring Kunjungan')
-
+@extends('app')
+@section('title', 'Monitoring Operasional')
 @section('content')
-<div class="container-xxl flex-grow-1 container-p-y">
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <h4 class="py-3 mb-0"><span class="text-muted fw-light">Operational /</span> Monitoring</h4>
-        <span class="badge bg-label-primary">{{ \Carbon\Carbon::parse($today)->format('d F Y') }}</span>
+
+<div class="bg-gray-100 flex-1 p-6 md:mt-16">
+    <div class="flex justify-between items-center mb-6">
+        <h1 class="h5">Monitoring Kunjungan Hari Ini</h1>
+        <span class="bg-indigo-100 text-indigo-800 py-1 px-3 rounded text-sm font-bold">
+            {{ \Carbon\Carbon::parse($today)->format('d F Y') }}
+        </span>
     </div>
 
-    <!-- Stats Cards -->
-    <div class="row mb-4">
-        <div class="col-sm-6 col-lg-3">
-            <div class="card card-border-shadow-primary h-100">
-                <div class="card-body">
-                    <div class="d-flex align-items-center mb-2 pb-1">
-                        <div class="avatar me-2">
-                            <span class="avatar-initial rounded bg-label-primary"><i class="bx bx-calendar"></i></span>
-                        </div>
-                        <h4 class="ms-1 mb-0">{{ $stats['total'] }}</h4>
-                    </div>
-                    <p class="mb-1">Total Kunjungan</p>
-                </div>
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
+        <div class="card bg-white border rounded shadow-md p-4 flex items-center">
+            <div class="p-3 rounded-full bg-blue-100 text-blue-600 mr-4">
+                <i class="fad fa-calendar-alt text-2xl"></i>
+            </div>
+            <div>
+                <p class="text-gray-500 text-sm uppercase font-bold">Total</p>
+                <p class="text-2xl font-bold text-gray-800">{{ $stats['total'] }}</p>
             </div>
         </div>
-        <div class="col-sm-6 col-lg-3">
-            <div class="card card-border-shadow-warning h-100">
-                <div class="card-body">
-                    <div class="d-flex align-items-center mb-2 pb-1">
-                        <div class="avatar me-2">
-                            <span class="avatar-initial rounded bg-label-warning"><i class="bx bx-run"></i></span>
-                        </div>
-                        <h4 class="ms-1 mb-0">{{ $stats['on_site'] }}</h4>
-                    </div>
-                    <p class="mb-1">On Site (Sedang Dikerjakan)</p>
-                </div>
+        <div class="card bg-white border rounded shadow-md p-4 flex items-center">
+            <div class="p-3 rounded-full bg-yellow-100 text-yellow-600 mr-4">
+                <i class="fad fa-running text-2xl"></i>
+            </div>
+            <div>
+                <p class="text-gray-500 text-sm uppercase font-bold">On Site</p>
+                <p class="text-2xl font-bold text-gray-800">{{ $stats['on_site'] }}</p>
             </div>
         </div>
-        <div class="col-sm-6 col-lg-3">
-            <div class="card card-border-shadow-success h-100">
-                <div class="card-body">
-                    <div class="d-flex align-items-center mb-2 pb-1">
-                        <div class="avatar me-2">
-                            <span class="avatar-initial rounded bg-label-success"><i class="bx bx-check-circle"></i></span>
-                        </div>
-                        <h4 class="ms-1 mb-0">{{ $stats['completed'] }}</h4>
-                    </div>
-                    <p class="mb-1">Selesai</p>
-                </div>
+        <div class="card bg-white border rounded shadow-md p-4 flex items-center">
+            <div class="p-3 rounded-full bg-green-100 text-green-600 mr-4">
+                <i class="fad fa-check-circle text-2xl"></i>
+            </div>
+            <div>
+                <p class="text-gray-500 text-sm uppercase font-bold">Selesai</p>
+                <p class="text-2xl font-bold text-gray-800">{{ $stats['completed'] }}</p>
             </div>
         </div>
-        <div class="col-sm-6 col-lg-3">
-            <div class="card card-border-shadow-danger h-100">
-                <div class="card-body">
-                    <div class="d-flex align-items-center mb-2 pb-1">
-                        <div class="avatar me-2">
-                            <span class="avatar-initial rounded bg-label-danger"><i class="bx bx-time"></i></span>
-                        </div>
-                        <h4 class="ms-1 mb-0">{{ $stats['pending'] }}</h4>
-                    </div>
-                    <p class="mb-1">Belum Jalan / Pending</p>
-                </div>
+        <div class="card bg-white border rounded shadow-md p-4 flex items-center">
+            <div class="p-3 rounded-full bg-red-100 text-red-600 mr-4">
+                <i class="fad fa-clock text-2xl"></i>
+            </div>
+            <div>
+                <p class="text-gray-500 text-sm uppercase font-bold">Pending</p>
+                <p class="text-2xl font-bold text-gray-800">{{ $stats['pending'] }}</p>
             </div>
         </div>
     </div>
 
-    <!-- Table -->
-    <div class="card">
-        <h5 class="card-header">Jadwal Hari Ini</h5>
-        <div class="table-responsive text-nowrap">
-            <table class="table table-hover">
+    <div class="card bg-white border rounded shadow-md w-full">
+        <div class="card-header border-b border-gray-200 p-4">
+            <h2 class="font-bold text-gray-800">Jadwal Real-time</h2>
+        </div>
+        <div class="card-body p-0 overflow-x-auto">
+            <table class="w-full text-left border-collapse table-auto">
                 <thead>
-                    <tr>
-                        <th>Jam</th>
-                        <th>Ticket ID</th>
-                        <th>TS</th>
-                        <th>Customer</th>
-                        <th>Status</th>
-                        <th>Check-in</th>
-                        <th>Actions</th>
+                    <tr class="bg-gray-100 text-gray-700 text-xs uppercase tracking-wider font-bold border-b border-gray-200">
+                        <th class="px-6 py-4">Jam</th>
+                        <th class="px-6 py-4">ID Tiket</th>
+                        <th class="px-6 py-4">Teknisi (TS)</th>
+                        <th class="px-6 py-4">Customer</th>
+                        <th class="px-6 py-4 text-center">Status</th>
+                        <th class="px-6 py-4 text-center">Aksi</th>
                     </tr>
                 </thead>
-                <tbody>
+                <tbody class="text-gray-600 text-sm font-light">
                     @forelse($todaysVisits as $visit)
-                    @php
-                    // Emergency Check logic for UI
-                    $isLate = false;
-                    if($visit->status == 'ASSIGNED' && \Carbon\Carbon::parse($visit->visit_date . ' ' . $visit->visit_time)->addMinutes(30)->isPast()) {
-                    $isLate = true;
-                    }
-                    @endphp
-                    <tr class="{{ $isLate ? 'table-danger' : '' }}">
-                        <td><strong>{{ \Carbon\Carbon::parse($visit->visit_time)->format('H:i') }}</strong></td>
-                        <td>{{ $visit->visit_ticket_id }}</td>
-                        <td>
+                    <tr class="border-b border-gray-200 hover:bg-gray-100 transition duration-300 ease-in-out">
+                        <td class="px-6 py-4 font-bold">{{ \Carbon\Carbon::parse($visit->visit_time)->format('H:i') }}</td>
+                        <td class="px-6 py-4">{{ $visit->visit_ticket_id }}</td>
+                        <td class="px-6 py-4">
                             @if($visit->assignment)
-                            <div class="d-flex justify-content-start align-items-center">
-                                <div class="avatar-wrapper">
-                                    <div class="avatar avatar-xs me-2">
-                                        <span class="avatar-initial rounded-circle bg-label-secondary">{{ substr($visit->assignment->ts->name ?? 'T', 0, 2) }}</span>
-                                    </div>
-                                </div>
-                                <div class="d-flex flex-column">
-                                    <span class="text-truncate">{{ $visit->assignment->ts->name ?? 'Unknown' }}</span>
-                                </div>
-                            </div>
+                                <span class="font-bold text-gray-800">{{ $visit->assignment->ts->name ?? 'TS' }}</span>
                             @else
-                            <span class="badge bg-label-secondary">Belum Diambil</span>
+                                <span class="italic text-gray-400">Belum diambil</span>
                             @endif
                         </td>
-                        <td>{{ $visit->customer->name ?? '-' }}</td>
-                        <td>
-                            @if($isLate)
-                            <span class="badge bg-danger blink">LATE CHECK-IN</span>
-                            @else
-                            <span class="badge bg-label-{{ $visit->status == 'COMPLETED' ? 'success' : ($visit->status == 'IN_PROGRESS' ? 'primary' : 'warning') }}">
+                        <td class="px-6 py-4">{{ $visit->customer->name ?? '-' }}</td>
+                        <td class="px-6 py-4 text-center">
+                            <span class="bg-gray-200 text-gray-700 py-1 px-3 rounded-full text-xs font-bold">
                                 {{ $visit->status }}
                             </span>
-                            @endif
                         </td>
-                        <td>
-                            {{-- Assuming check-in time is in attendance relation, but we didn't eager load it here. 
-                                     But status IN_PROGRESS implies checking in. 
-                                     For MVP, just show status. --}}
-                            @if($visit->status == 'IN_PROGRESS')
-                            <i class="bx bx-check text-success"></i>
-                            @else
-                            -
-                            @endif
-                        </td>
-                        <td>
-                            <div class="d-flex align-items-center gap-1">
-                                <a href="{{ route('assignments.show', $visit->visit_ticket_id) }}" class="btn btn-sm btn-icon btn-outline-secondary" title="View Detail">
-                                    <i class="bx bx-show"></i>
-                                </a>
-
-                                @if($visit->status == 'COMPLETED')
-                                @if($visit->invoice)
-                                <a href="{{ route('invoices.show', $visit->invoice->invoice_id) }}" class="btn btn-sm btn-icon btn-outline-success" title="View Invoice">
-                                    <i class="bx bx-file"></i>
-                                </a>
-                                @else
-                                <a href="{{ route('invoices.create', ['ticket_id' => $visit->visit_ticket_id]) }}" class="btn btn-sm btn-icon btn-outline-primary" title="Create Invoice">
-                                    <i class="bx bx-money"></i>
-                                </a>
-                                @endif
-                                @endif
-                            </div>
+                        <td class="px-6 py-4 text-center">
+                            <a href="{{ route('assignments.show', $visit->visit_ticket_id) }}" class="text-indigo-600 hover:text-indigo-900 mx-1">
+                                <i class="fad fa-eye"></i>
+                            </a>
                         </td>
                     </tr>
                     @empty
                     <tr>
-                        <td colspan="7" class="text-center">Tidak ada jadwal kunjungan hari ini.</td>
+                        <td colspan="6" class="px-6 py-4 text-center text-gray-500">Tidak ada jadwal hari ini.</td>
                     </tr>
                     @endforelse
                 </tbody>

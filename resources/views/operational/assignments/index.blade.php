@@ -1,150 +1,145 @@
-<x-app-layout>
-    <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            {{ __('Job Pool & My Assignments') }}
-        </h2>
-    </x-slot>
+@extends('app')
+@section('title', 'Job Pool & Tugas Saya')
+@section('content')
 
-    <div class="py-12">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+<div class="bg-gray-100 flex-1 p-6 md:mt-16">
+    
+    <div class="flex mb-4 border-b border-gray-300">
+        <button class="px-4 py-2 text-gray-700 font-bold border-b-2 border-indigo-500 focus:outline-none" id="btn-pool" onclick="showTab('pool')">
+            Open Pool ({{ $openTickets->count() }})
+        </button>
+        <button class="px-4 py-2 text-gray-500 font-bold hover:text-gray-700 focus:outline-none" id="btn-my" onclick="showTab('my')">
+            My Jobs ({{ $myAssignments->count() }})
+        </button>
+    </div>
 
-            <!-- Tabs Navigation -->
-            <div class="mb-4 border-b border-gray-200 dark:border-gray-700">
-                <ul class="flex flex-wrap -mb-px text-sm font-medium text-center" id="myTab" data-tabs-toggle="#myTabContent" role="tablist">
-                    <li class="mr-2" role="presentation">
-                        <button class="inline-block p-4 border-b-2 rounded-t-lg" id="open-pool-tab" data-tabs-target="#open-pool" type="button" role="tab" aria-controls="open-pool" aria-selected="true" onclick="switchTab('open-pool')">
-                            Open Pool ({{ $openTickets->count() }})
-                        </button>
-                    </li>
-                    <li class="mr-2" role="presentation">
-                        <button class="inline-block p-4 border-b-2 border-transparent rounded-t-lg hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300" id="my-jobs-tab" data-tabs-target="#my-jobs" type="button" role="tab" aria-controls="my-jobs" aria-selected="false" onclick="switchTab('my-jobs')">
-                            My Jobs ({{ $myAssignments->count() }})
-                        </button>
-                    </li>
-                </ul>
+    <div id="tab-pool">
+        <div class="card bg-white border rounded shadow-md w-full">
+            <div class="card-header border-b border-gray-200 p-4">
+                <h2 class="font-bold text-gray-800">Daftar Pekerjaan Tersedia</h2>
             </div>
-
-            <div id="myTabContent">
-                <!-- Open Pool Content -->
-                <div class="hidden p-4 rounded-lg bg-gray-50 dark:bg-gray-800" id="open-pool" role="tabpanel" aria-labelledby="open-pool-tab">
-
-                    @if(session('error'))
-                    <div class="mb-4 bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative">
-                        {{ session('error') }}
-                    </div>
-                    @endif
-
-                    @forelse($openTickets as $ticket)
-                    <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg mb-4 p-4 border-l-4 border-blue-500">
-                        <div class="flex justify-between items-start">
-                            <div>
-                                <h3 class="font-bold text-lg">{{ $ticket->issue_category }}</h3>
-                                <p class="text-sm text-gray-600">{{ $ticket->visit_address }}</p>
-                                <p class="text-xs text-gray-500 mt-1">Ref: {{ $ticket->visit_ticket_id }}</p>
-                            </div>
-                            <span class="bg-{{ $ticket->priority_level == 'URGENT' ? 'red' : ($ticket->priority_level == 'HIGH' ? 'orange' : 'blue') }}-100 text-{{ $ticket->priority_level == 'URGENT' ? 'red' : ($ticket->priority_level == 'HIGH' ? 'orange' : 'blue') }}-800 text-xs font-semibold mr-2 px-2.5 py-0.5 rounded">
-                                {{ $ticket->priority_level }}
-                            </span>
-                        </div>
-                        <div class="mt-4 flex justify-between items-center">
-                            <span class="text-sm text-gray-500">{{ $ticket->created_at->diffForHumans() }}</span>
-                            <button onclick="takeJob('{{ $ticket->visit_ticket_id }}', this)" class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded text-sm">
-                                AMBIL JOB
-                            </button>
-                        </div>
-                    </div>
-                    @empty
-                    <div class="text-center py-10 text-gray-500">
-                        No open jobs available at the moment.
-                    </div>
-                    @endforelse
-                </div>
-
-                <!-- My Jobs Content -->
-                <div class="hidden p-4 rounded-lg bg-gray-50 dark:bg-gray-800" id="my-jobs" role="tabpanel" aria-labelledby="my-jobs-tab">
-                    @forelse($myAssignments as $assignment)
-                    <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg mb-4 p-4 border-l-4 border-green-500">
-                        <div class="flex justify-between items-start">
-                            <div>
-                                <h3 class="font-bold text-lg">{{ $assignment->ticket->issue_category }}</h3>
-                                <p class="text-sm text-gray-600">{{ $assignment->ticket->visit_address }}</p>
-                                <p class="text-xs text-gray-500 mt-1">Status: {{ $assignment->status }}</p>
-                            </div>
-                        </div>
-                        <div class="mt-4">
-                            <a href="#" class="block text-center bg-gray-600 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded text-sm">
-                                View Details
-                            </a>
-                        </div>
-                    </div>
-                    @empty
-                    <div class="text-center py-10 text-gray-500">
-                        You have no active assignments.
-                    </div>
-                    @endforelse
-                </div>
+            <div class="card-body p-0 overflow-x-auto">
+                <table class="w-full text-left border-collapse table-auto">
+                    <thead>
+                        <tr class="bg-gray-100 text-gray-700 text-xs uppercase tracking-wider font-bold border-b border-gray-200">
+                            <th class="px-6 py-4">ID Tiket</th>
+                            <th class="px-6 py-4">Kategori & Masalah</th>
+                            <th class="px-6 py-4">Lokasi</th>
+                            <th class="px-6 py-4 text-center">Prioritas</th>
+                            <th class="px-6 py-4 text-center">Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody class="text-gray-600 text-sm font-light">
+                        @forelse($openTickets as $ticket)
+                        <tr class="border-b border-gray-200 hover:bg-gray-100 transition duration-300 ease-in-out">
+                            <td class="px-6 py-4 font-bold">{{ $ticket->visit_ticket_id }}</td>
+                            <td class="px-6 py-4">
+                                <span class="block font-bold">{{ $ticket->issue_category }}</span>
+                                <span class="text-xs">{{ Str::limit($ticket->issue_description, 50) }}</span>
+                            </td>
+                            <td class="px-6 py-4">{{ Str::limit($ticket->visit_address, 30) }}</td>
+                            <td class="px-6 py-4 text-center">
+                                @php
+                                    $color = $ticket->priority_level == 'URGENT' ? 'red' : ($ticket->priority_level == 'HIGH' ? 'orange' : 'blue');
+                                @endphp
+                                <span class="bg-{{ $color }}-200 text-{{ $color }}-700 py-1 px-3 rounded-full text-xs font-bold">
+                                    {{ $ticket->priority_level }}
+                                </span>
+                            </td>
+                            <td class="px-6 py-4 text-center">
+                                <button onclick="takeJob('{{ $ticket->visit_ticket_id }}', this)" class="bg-green-500 hover:bg-green-600 text-white py-1 px-3 rounded text-xs font-bold shadow transition-all">
+                                    <i class="fad fa-check mr-1"></i> AMBIL
+                                </button>
+                            </td>
+                        </tr>
+                        @empty
+                        <tr>
+                            <td colspan="5" class="px-6 py-4 text-center text-gray-500">Tidak ada pekerjaan tersedia.</td>
+                        </tr>
+                        @endforelse
+                    </tbody>
+                </table>
             </div>
         </div>
     </div>
 
-    <!-- Simple Tab Script & AJAX -->
-    <script>
-        // Init: Show Open Pool
-        document.getElementById('open-pool').classList.remove('hidden');
-        document.getElementById('open-pool-tab').classList.add('text-blue-600', 'border-blue-600');
+    <div id="tab-my" class="hidden">
+        <div class="card bg-white border rounded shadow-md w-full">
+            <div class="card-header border-b border-gray-200 p-4">
+                <h2 class="font-bold text-gray-800">Pekerjaan Saya</h2>
+            </div>
+            <div class="card-body p-0 overflow-x-auto">
+                <table class="w-full text-left border-collapse table-auto">
+                    <thead>
+                        <tr class="bg-gray-100 text-gray-700 text-xs uppercase tracking-wider font-bold border-b border-gray-200">
+                            <th class="px-6 py-4">ID Tiket</th>
+                            <th class="px-6 py-4">Masalah</th>
+                            <th class="px-6 py-4">Status</th>
+                            <th class="px-6 py-4 text-center">Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody class="text-gray-600 text-sm font-light">
+                        @forelse($myAssignments as $assignment)
+                        <tr class="border-b border-gray-200 hover:bg-gray-100 transition duration-300 ease-in-out">
+                            <td class="px-6 py-4 font-bold">{{ $assignment->visit_ticket_id }}</td>
+                            <td class="px-6 py-4">{{ $assignment->ticket->issue_category }}</td>
+                            <td class="px-6 py-4">
+                                <span class="bg-indigo-200 text-indigo-700 py-1 px-3 rounded-full text-xs font-bold">
+                                    {{ $assignment->status }}
+                                </span>
+                            </td>
+                            <td class="px-6 py-4 text-center">
+                                <a href="{{ route('assignments.show', $assignment->visit_ticket_id) }}" class="bg-gray-600 hover:bg-gray-700 text-white py-1 px-3 rounded text-xs font-bold shadow transition-all">
+                                    <i class="fad fa-eye mr-1"></i> Detail
+                                </a>
+                            </td>
+                        </tr>
+                        @empty
+                        <tr>
+                            <td colspan="4" class="px-6 py-4 text-center text-gray-500">Anda belum mengambil pekerjaan.</td>
+                        </tr>
+                        @endforelse
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
 
-        function switchTab(tabId) {
-            // Hide all
-            document.getElementById('open-pool').classList.add('hidden');
-            document.getElementById('my-jobs').classList.add('hidden');
+</div>
 
-            // Reset buttons
-            document.getElementById('open-pool-tab').classList.remove('text-blue-600', 'border-blue-600');
-            document.getElementById('my-jobs-tab').classList.remove('text-blue-600', 'border-blue-600');
+<script>
+    function showTab(tab) {
+        document.getElementById('tab-pool').classList.add('hidden');
+        document.getElementById('tab-my').classList.add('hidden');
+        document.getElementById('btn-pool').classList.remove('border-indigo-500', 'text-gray-700');
+        document.getElementById('btn-pool').classList.add('text-gray-500', 'border-transparent');
+        document.getElementById('btn-my').classList.remove('border-indigo-500', 'text-gray-700');
+        document.getElementById('btn-my').classList.add('text-gray-500', 'border-transparent');
 
-            // Show selected
-            document.getElementById(tabId).classList.remove('hidden');
-            document.getElementById(tabId + '-tab').classList.add('text-blue-600', 'border-blue-600');
-        }
+        document.getElementById('tab-' + tab).classList.remove('hidden');
+        document.getElementById('btn-' + tab).classList.add('border-indigo-500', 'text-gray-700');
+        document.getElementById('btn-' + tab).classList.remove('text-gray-500', 'border-transparent');
+    }
 
-        function takeJob(ticketId, btn) {
-            if (!confirm('Are you sure you want to take this job?')) return;
-
-            // Disable button
-            btn.disabled = true;
-            btn.innerText = 'Processing...';
-            btn.classList.add('opacity-50', 'cursor-not-allowed');
-
-            fetch("{{ route('assignments.take') }}", {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
-                    },
-                    body: JSON.stringify({
-                        visit_ticket_id: ticketId
-                    })
-                })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        alert('Job taken successfully!');
-                        window.location.reload();
-                    } else {
-                        alert('Failed: ' + data.message);
-                        // Re-enable
-                        btn.disabled = false;
-                        btn.innerText = 'AMBIL JOB';
-                        btn.classList.remove('opacity-50', 'cursor-not-allowed');
-                    }
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                    alert('An error occurred. Please try again.');
-                    btn.disabled = false;
-                    btn.innerText = 'AMBIL JOB';
-                    btn.classList.remove('opacity-50', 'cursor-not-allowed');
-                });
-        }
-    </script>
-</x-app-layout>
+    function takeJob(ticketId, btn) {
+        if (!confirm('Ambil pekerjaan ini?')) return;
+        btn.disabled = true;
+        btn.innerText = '...';
+        
+        fetch("{{ route('assignments.take') }}", {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': '{{ csrf_token() }}'
+            },
+            body: JSON.stringify({ visit_ticket_id: ticketId })
+        })
+        .then(res => res.json())
+        .then(data => {
+            if(data.success) { alert('Berhasil!'); window.location.reload(); }
+            else { alert(data.message); btn.disabled = false; btn.innerText = 'AMBIL'; }
+        })
+        .catch(err => { alert('Error'); btn.disabled = false; });
+    }
+</script>
+@endsection
