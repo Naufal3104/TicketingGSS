@@ -14,19 +14,14 @@ class VisitAssignment extends Model
     protected $fillable = [
         'visit_ticket_id',
         'ts_id',
-        'assigned_at',
-        'google_event_id',
-        'check_in_time',
-        'check_out_time',
-        'check_in_location',
-        'work_report',
+        'assignment_type',
         'status',
+        'note',
+        'assigned_at',
     ];
 
     protected $casts = [
-        'assigned_at' => 'datetime',
-        'check_in_time' => 'datetime',
-        'check_out_time' => 'datetime',
+        'assigned_at' => 'datetime'
     ];
 
     public function ticket()
@@ -37,6 +32,11 @@ class VisitAssignment extends Model
     public function ts()
     {
         return $this->belongsTo(User::class, 'ts_id', 'user_id');
+    }
+
+    public function attendances()
+    {
+        return $this->hasMany(VisitAttendance::class, 'visit_assignment_id', 'assignment_id');
     }
 
     /** @use HasFactory<\Database\Factories\VisitAssignmentFactory> */

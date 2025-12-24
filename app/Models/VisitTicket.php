@@ -30,8 +30,6 @@ class VisitTicket extends Model
         'priority_level',
         'ts_quota_needed',
         'status',
-        'visit_date',
-        'visit_time',
     ];
 
     public function customer()
@@ -46,7 +44,7 @@ class VisitTicket extends Model
 
     public function assignment()
     {
-        return $this->hasOne(VisitAssignment::class, 'visit_ticket_id', 'visit_ticket_id');
+        return $this->hasMany(VisitAssignment::class, 'visit_ticket_id', 'visit_ticket_id');
     }
 
     public function documents()

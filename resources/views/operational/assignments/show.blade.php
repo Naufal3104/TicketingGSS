@@ -15,20 +15,75 @@
                 <h2 class="font-bold text-gray-800">Informasi Tiket</h2>
             </div>
             <div class="card-body p-6">
+                {{-- 1. Perbaikan Customer Name --}}
                 <div class="mb-4">
                     <label class="block text-gray-500 text-xs uppercase tracking-wider mb-1">Customer</label>
-                    <p class="font-bold text-gray-800 text-lg">{{ $ticket->customer->name ?? 'N/A' }}</p>
+                    <div class="flex items-center">
+                        <div class="w-8 h-8 rounded-full bg-indigo-100 flex items-center justify-center mr-3 text-indigo-700 font-bold text-xs">
+                            {{ substr($ticket->customer->instance ?? $ticket->customer->customer_name, 0, 1) }}
+                        </div>
+                        <div>
+                            {{-- Ganti 'name' menjadi 'customer_name' --}}
+                            <p class="font-bold text-gray-800 text-lg">{{ $ticket->customer->instance ?? 'Unknown Customer' }}</p>
+                            <p class="text-xs text-gray-500">{{ $ticket->customer->customer_name ?? '-' }}</p>
+                        </div>
+                    </div>
                 </div>
+
+                {{-- 2. Menampilkan Kebutuhan Kuota --}}
+                <div class="mb-4 grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-gray-500 text-xs uppercase tracking-wider mb-1">Prioritas</label>
+                        @php
+                            $prioColor = match($ticket->priority_level) {
+                                'URGENT' => 'red',
+                                'HIGH' => 'orange',
+                                'MEDIUM' => 'blue',
+                                default => 'gray'
+                            };
+                        @endphp
+                        <span class="text-xs font-bold text-{{ $prioColor }}-600 bg-{{ $prioColor }}-100 py-1 px-2 rounded">
+                            {{ $ticket->priority_level }}
+                        </span>
+                    </div>
+                    <div>
+                        <label class="block text-gray-500 text-xs uppercase tracking-wider mb-1">Butuh Teknisi</label>
+                        <span class="font-bold text-gray-800">
+                            <i class="fad fa-users mr-1 text-indigo-500"></i> {{ $ticket->ts_quota_needed }} Orang
+                        </span>
+                    </div>
+                </div>
+
+                {{-- 3. Menampilkan Teknisi yang Bertugas --}}
+                <div class="mb-4 bg-gray-50 p-3 rounded border border-gray-100">
+                    <label class="block text-gray-500 text-xs uppercase tracking-wider mb-2">Teknisi Bertugas (PIC)</label>
+                    @if($ticket->assignment && $ticket->assignment->user)
+                        <div class="flex items-center">
+                            <div class="w-6 h-6 rounded-full bg-green-100 flex items-center justify-center mr-2 text-green-700 font-bold text-xs">
+                                {{ substr($ticket->assignment->user->name, 0, 1) }}
+                            </div>
+                            <span class="font-semibold text-gray-700 text-sm">
+                                {{ $ticket->assignment->user->name }}
+                            </span>
+                        </div>
+                    @else
+                        <span class="text-sm text-gray-400 italic">Belum ada teknisi yang mengambil.</span>
+                    @endif
+                </div>
+
                 <div class="mb-4">
                     <label class="block text-gray-500 text-xs uppercase tracking-wider mb-1">Masalah</label>
                     <p class="font-bold text-gray-800">{{ $ticket->issue_category }}</p>
-                    <p class="text-gray-600 text-sm mt-1">{{ $ticket->issue_description }}</p>
+                    <p class="text-gray-600 text-sm mt-1 bg-yellow-50 p-2 ">
+                        "{{ $ticket->issue_description }}"
+                    </p>
                 </div>
+
                 <div class="mb-4">
-                    <label class="block text-gray-500 text-xs uppercase tracking-wider mb-1">Alamat</label>
-                    <p class="text-gray-700">{{ $ticket->visit_address }}</p>
-                    <a href="http://maps.google.com/?q={{ urlencode($ticket->visit_address) }}" target="_blank" class="text-indigo-600 text-sm hover:underline mt-1 inline-block">
-                        <i class="fad fa-map-marker-alt"></i> Buka di Maps
+                    <label class="block text-gray-500 text-xs uppercase tracking-wider mb-1">Alamat Kunjungan</label>
+                    <p class="text-gray-700 text-sm">{{ $ticket->visit_address }}</p>
+                    <a href="https://www.google.com/maps/search/?api=1&query={{ urlencode($ticket->visit_address) }}" target="_blank" class="text-indigo-600 text-sm hover:underline mt-2 inline-flex items-center">
+                        <i class="fad fa-map-marked-alt mr-1"></i> Buka di Google Maps
                     </a>
                 </div>
             </div>

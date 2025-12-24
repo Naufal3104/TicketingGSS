@@ -11,6 +11,18 @@
             <i class="fad fa-plus-circle mr-2"></i> Buat Tiket Baru
         </a>
     </div>
+    
+    @if(session('success'))
+    <div class="mb-4 bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative">
+        {{ session('success') }}
+    </div>
+    @endif
+    
+    @if($errors->any())
+     <div class="mb-4 bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative">
+        {{ $errors->first() }}
+    </div>
+    @endif
 
     <div class="card bg-white border rounded shadow-md w-full">
         
@@ -43,11 +55,11 @@
                         <td class="px-6 py-4">
                             <div class="flex items-center">
                                 <div class="w-8 h-8 rounded-full bg-indigo-100 flex items-center justify-center mr-3 text-indigo-700 font-bold text-xs">
-                                    {{ substr($ticket->customer->customer_name ?? 'C', 0, 1) }}
+                                    {{ substr($ticket->customer->instance ?? $ticket->customer->customer_name, 0, 1) }}
                                 </div>
                                 <div>
-                                    <span class="font-bold text-gray-800 block">{{ $ticket->customer->customer_name ?? 'Unknown' }}</span>
-                                    <span class="text-xs text-gray-500">{{ $ticket->customer->pic_name ?? '-' }}</span>
+                                    <span class="font-bold text-gray-800 block">{{ $ticket->customer->instance ?? 'Unknown' }}</span>
+                                    <span class="text-xs text-gray-500">{{ $ticket->customer->customer_name ?? '-' }}</span>
                                 </div>
                             </div>
                         </td>
@@ -86,10 +98,25 @@
                             {{ $ticket->created_at->format('d M Y H:i') }}
                         </td>
                         <td class="px-6 py-4 text-center">
-                            <div class="flex item-center justify-center">
-                                <a href="{{ route('assignments.show', $ticket->visit_ticket_id) }}" class="w-4 mr-2 transform hover:text-indigo-700 hover:scale-110 transition-transform" title="Lihat Detail">
+                            <div class="flex item-center justify-center space-x-2">
+                                {{-- Tombol View --}}
+                                <a href="{{ route('assignments.show', $ticket->visit_ticket_id) }}" class="w-4 transform hover:text-indigo-700 hover:scale-110 transition-transform" title="Lihat Detail">
                                     <i class="fad fa-eye"></i>
                                 </a>
+
+                                {{-- Tombol Edit --}}
+                                <a href="{{ route('tickets.edit', $ticket->visit_ticket_id) }}" class="w-4 transform hover:text-yellow-500 hover:scale-110 transition-transform" title="Edit Tiket">
+                                    <i class="fad fa-pencil"></i>
+                                </a>
+
+                                {{-- Tombol Delete --}}
+                                <form action="{{ route('tickets.destroy', $ticket->visit_ticket_id) }}" method="POST" onsubmit="return confirm('Apakah Anda yakin ingin menghapus tiket ini? Tindakan ini tidak dapat dibatalkan.');">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit" class="w-4 transform hover:text-red-500 hover:scale-110 transition-transform" title="Hapus Tiket">
+                                        <i class="fad fa-trash"></i>
+                                    </button>
+                                </form>
                             </div>
                         </td>
                     </tr>

@@ -86,6 +86,8 @@ class DatabaseSeeder extends Seeder
         $this->call([
             CustomerSeeder::class,
             VisitTicketSeeder::class,
+            VisitAssignmentSeeder::class,
+            VisitAttendanceSeeder::class,
         ]);
     }
 }

@@ -47,7 +47,7 @@ class TicketController extends Controller
     public function create()
     {
         $customers = \App\Models\Customer::all(); // Simple fetch for MVP
-        return view('operational.tickets.create', compact('customers'));
+        return view('operational.tickets.form', compact('customers'));
     }
 
     /**
@@ -118,9 +118,11 @@ class TicketController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(VisitTicket $visitTicket)
+    public function edit(VisitTicket $ticket)
     {
-        //
+        $customers = \App\Models\Customer::all();
+        // Kita gunakan view yang sama dengan create, tapi kirim data $ticket
+        return view('operational.tickets.form', compact('customers', 'ticket'));
     }
 
     /**
@@ -128,7 +130,31 @@ class TicketController extends Controller
      */
     public function update(Request $request, VisitTicket $visitTicket)
     {
-        //
+        $validated = $request->validate([
+            'customer_id' => 'required|exists:customers,customer_id',
+            'issue_category' => 'required|string|max:50',
+            'issue_description' => 'required|string',
+            'visit_address' => 'required|string',
+            'priority_level' => 'required|in:LOW,MEDIUM,HIGH,URGENT',
+            'ts_quota_needed' => 'required|integer|min:1',
+            // Status boleh diupdate manual jika perlu, atau tambahkan validasi status disini
+        ]);
+
+        try {
+            $ticket->update([
+                'customer_id' => $validated['customer_id'],
+                'issue_category' => $validated['issue_category'],
+                'issue_description' => $validated['issue_description'],
+                'visit_address' => $validated['visit_address'],
+                'priority_level' => $validated['priority_level'],
+                'ts_quota_needed' => $validated['ts_quota_needed'],
+            ]);
+
+            return redirect()->route('tickets.index')->with('success', 'Ticket updated successfully: ' . $ticket->visit_ticket_id);
+
+        } catch (\Exception $e) {
+            return back()->withInput()->withErrors(['msg' => 'Failed to update ticket: ' . $e->getMessage()]);
+        }
     }
 
     /**
@@ -136,6 +162,16 @@ class TicketController extends Controller
      */
     public function destroy(VisitTicket $visitTicket)
     {
-        //
+        try {
+            // Opsional: Cek apakah tiket sudah ada assignment atau progress sebelum delete
+            if ($ticket->status !== 'OPEN') {
+                 return back()->withErrors(['msg' => 'Hanya tiket berstatus OPEN yang bisa dihapus.']);
+            }
+
+            $ticket->delete();
+            return redirect()->route('tickets.index')->with('success', 'Ticket deleted successfully.');
+        } catch (\Exception $e) {
+             return back()->withErrors(['msg' => 'Failed to delete ticket: ' . $e->getMessage()]);
+        }
     }
 }

@@ -22,14 +22,10 @@ return new class extends Migration
             // FK to users (TS) - assuming user_id is the key to link
             $table->string('ts_id', 20);
             // $table->foreign('ts_id')->references('user_id')->on('users'); // Uncomment if user_id is unique and indexed
-
+            $table->enum('assignment_type', ['REGULAR', 'EMERGENCY'])->default('REGULAR');
+            $table->enum('status', ['ACTIVE', 'REPLACED', 'CANCELLED'])->default('ACTIVE');
+            $table->text('note')->nullable();
             $table->timestamp('assigned_at')->useCurrent();
-            $table->string('google_event_id', 255)->nullable();
-            $table->dateTime('check_in_time')->nullable();
-            $table->dateTime('check_out_time')->nullable();
-            $table->string('check_in_location', 100)->nullable();
-            $table->text('work_report')->nullable();
-            $table->enum('status', ['PENDING', 'ON_SITE', 'DONE'])->default('PENDING');
             $table->timestamps();
         });
     }

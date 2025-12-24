@@ -33,6 +33,7 @@
     <!-- end wrapper -->
 
     <!-- script -->
+    <script src="{{ asset('cleopatra/build/js/scripts.js') }}"></script>
     <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
     <!-- end script -->
 

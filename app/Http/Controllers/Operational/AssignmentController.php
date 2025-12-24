@@ -29,7 +29,7 @@ class AssignmentController extends Controller
             ->get();
 
         // 2. My Assignments (Active)
-        $myAssignments = \App\Models\VisitAssignment::with('ticket')
+        $myAssignments = VisitAssignment::with('ticket')
             ->where('ts_id', $tsId)
             ->whereIn('status', ['PENDING', 'ON_SITE', 'DONE']) // Show history too? Maybe limit to active for now or all
             ->orderBy('assigned_at', 'desc')
@@ -47,7 +47,16 @@ class AssignmentController extends Controller
             'visit_ticket_id' => 'required|string|exists:visit_tickets,visit_ticket_id',
         ]);
 
-        $tsId = Auth::id(); // Currently logged in TS
+        $user = Auth::user();
+        // Pastikan user memiliki user_id (karena di database kolom ini nullable)
+        if (!$user || !$user->user_id) {
+             return response()->json([
+                 'success' => false, 
+                 'message' => 'Unauthorized or User ID not set in profile'
+             ], 401);
+        }
+
+        $tsId = $user->user_id;
 
         if (!$tsId) {
             return response()->json(['success' => false, 'message' => 'Unauthorized'], 401);

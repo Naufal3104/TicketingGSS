@@ -13,17 +13,21 @@ return new class extends Migration
     {
         Schema::create('visit_attendances', function (Blueprint $table) {
             $table->id();
-            $table->string('visit_ticket_id', 20);
             $table->string('user_id', 20); // TS
-            $table->timestamp('check_in_at')->nullable();
-            $table->decimal('check_in_lat', 10, 8)->nullable();
-            $table->decimal('check_in_long', 11, 8)->nullable();
-            $table->timestamp('check_out_at')->nullable();
-            $table->decimal('check_out_lat', 10, 8)->nullable();
-            $table->decimal('check_out_long', 11, 8)->nullable();
+            $table->unsignedBigInteger('visit_assignment_id')->nullable();
+
+            // Data Absensi (Realita Lapangan)
+            $table->dateTime('check_in_time');
+            $table->string('check_in_location')->nullable(); // Koordinat/Alamat GPS
+            $table->text('check_in_photo')->nullable(); // Foto selfie/lokasi saat datang
+
+            $table->dateTime('check_out_time')->nullable();
+            $table->string('check_out_location')->nullable();
+            $table->text('check_out_photo')->nullable();
+            $table->text('work_report')->nullable();
             $table->timestamps();
 
-            $table->foreign('visit_ticket_id')->references('visit_ticket_id')->on('visit_tickets')->onDelete('cascade');
+            $table->foreign('visit_assignment_id')->references('assignment_id')->on('visit_assignments')->onDelete('cascade');
             $table->foreign('user_id')->references('user_id')->on('users')->onDelete('cascade');
         });
     }
