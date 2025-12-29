@@ -15,7 +15,7 @@ Route::get('/', function () {
 
 
 Route::get('/calendar', function () {
-    return view('ticketing');
+    return view('calendar');
 })->name('calendar');
 
 Route::post('/calendar/store', [CalendarController::class, 'store'])->name('calendar.store');
