@@ -9,28 +9,28 @@
 
 Jangan sentuh logic utama dulu. Fokus keluarkan validasi.
 
--   [ ] Buat `StoreTicketRequest` & `UpdateTicketRequest`.
--   [ ] Buat `StoreInvoiceRequest`.
--   [ ] **Action**: Ganti `$request->validate(...)` di controller dengan injeksi FormRequest.
+-   [x] Buat `StoreTicketRequest` & `UpdateTicketRequest`.
+-   [x] Buat `StoreInvoiceRequest`.
+-   [x] **Action**: Ganti `$request->validate(...)` di controller dengan injeksi FormRequest.
 -   _Goal_: Controller terlihat lebih rapih sedikit.
 
 #### Tahap 2: Service Layer Injection (Parallel Run)
 
 Kita mulai "mengalihkan" logic sedikit demi sedikit.
 
--   [ ] Buat file `App\Services\TicketService.php` dan `App\Services\InvoiceService.php`.
--   [ ] **Pindahkan Satu Method**: Ambil logic terberat (misal: `store` di TicketController).
+-   [x] Buat file `App\Services\TicketService.php` dan `App\Services\InvoiceService.php`.
+-   [x] **Pindahkan Satu Method**: Ambil logic terberat (misal: `store` di TicketController).
     -   Copy logic ke `TicketService->createTicket()`.
     -   Ganti isi `TicketController@store` menjadi pemanggilan Service.
     -   Pastikan fitur Surat Tugas (yang sudah ada) tetap jalan dengan memanggil logic yang sama.
--   [ ] **Ulangi untuk Update/Approve**: Pindahkan logic approval invoice ke `InvoiceService->approve()`.
+-   [x] **Ulangi untuk Update/Approve**: Pindahkan logic approval invoice ke `InvoiceService->approve()`.
 
 #### Tahap 3: Cleanup & Optimization (Scoping)
 
 Setelah logic pindah, bersihkan sisa-sisa query manual.
 
--   [ ] Ganti query raw (`where('status', 'OPEN')`) dengan **Model Scope** (`VisitTicket::open()->get()`).
--   [ ] Pastikan `AssignmentController` juga menggunakan `TicketService` jika ada logic yang beririsan (misal: update status tiket saat assign).
+-   [x] Ganti query raw (`where('status', 'OPEN')`) dengan **Model Scope** (`VisitTicket::open()->get()`).
+-   [x] Pastikan `AssignmentController` juga menggunakan `TicketService` jika ada logic yang beririsan (misal: update status tiket saat assign).
 
 ### Priority Check-list
 
@@ -84,50 +84,81 @@ Berikut adalah daftar controller yang ditemukan di `app/Http/Controllers`:
 -   `Auth\PasswordController`
 -   _dan controller auth lainnya..._
 
-### C. Plan Implementasi Controller & Fitur (Rough Draft)
+### C. Plan Implementasi Controller & Fitur (Breakdown Lengkap via modul.md)
 
-Berikut adalah rencana pengembangan controller yang perlu disesuaikan atau dibuat (refactoring/new implementation) beserta fitur utamanya:
+Berikut adalah status implementasi fitur berdasarkan `document/modul.md`:
 
-#### 1. Modul Penjadwalan Visiting (PJV)
-
--   **`TicketController`** (Priority: High)
-    -   [x] **Create Ticket**: Form input data pelanggan, jenis keluhan, upload foto awal.
-    -   [x] **Check Quota**: Logic validasi ketersediaan TS saat assign (sekarang manual, future: auto check).
-    -   [x] **Cancel Ticket**: Soft delete tiket jika cancel order.
--   **`AssignmentController`**
-    -   [x] **List Open Pool**: Menampilkan tiket yang belum diambil.
-    -   [x] **Claim Job**: Logic "first come first serve" dengan DB Transaction/Locking.
-
-#### 2. Modul Keuangan (FIN)
-
--   **`InvoiceController`** (Priority: Medium-High)
-    -   [x] **Generate Draft**: Auto-create invoice saat tiket status 'Done'.
-    -   [x] **Sales Approval**: UI untuk sales menyetujui/mengedit harga final.
-    -   [x] **Mark Paid**: Update status pembayaran & kirim notif ke customer.
-
-#### 3. Modul Eksekusi (EKD)
-
--   **`AttendanceController`**
-    -   [x] **Check-in**: Simpan timestamp & koordinat (GPS) teknisi saat tiba.
-    -   [x] **Check-out**: Simpan timestamp selesai & validasi durasi kerja.
--   **`DocumentController`**
-    -   [x] **Upload BAST**: Upload bukti serah terima (foto/dokumen).
-    -   [x] **Generate Surat Tugas**: Download PDF surat tugas berdasarkan data tiket.
--   **`MonitoringController`**
-    -   [x] **Emergency Re-pool**: Kembalikan tiket ke pool jika teknisi tidak hadir dalam X menit.
-    -   [x] **Extend Visit**: Request tambah hari jika pekerjaan belum selesai.
-
-#### 4. Modul Data Master (MDM)
+#### 1. Modul Manajemen Data Master (MDM)
 
 -   **`CustomerController`**
-    -   [x] **CRUD Manual**: Form tambah pelanggan untuk yang tidak via WA.
-    -   [x] **History**: Lihat riwayat tiket pelanggan tersebut.
--   **`UserController`** (Admin)
-    -   [x] **Role Management**: Assign role (CS, TS, Sales) ke user baru.
+    -   [x] **Registrasi Manual (CRUD)**: Create/Update/Delete customer via Web.
+    -   [x] **History**: Melihat riwayat tiket per customer.
+-   **`Api\WebhookController`**
+    -   [x] **Registrasi Otomatis (WA)**: Endpoint menerima data user baru dari WhatsApp (N8N).
+-   **`Admin\UserController`**
+    -   [x] **Create User**: Pendaftaran akun TS/CS/Sales.
+    -   [x] **Role Management**: Assign role & permissions.
+    -   [x] **Reset Password**: Update password user existing.
 
-#### 5. Modul Feedback (FDB)
+#### 2. Modul Penjadwalan Visiting (PJV)
 
--   **`FeedbackController`**
-    -   [x] **Public Form**: Endpoint untuk menerima rating dari link tanpa login (guest mode).
--   **`ReportController`**
-    -   [x] **KPI Dashboard**: Hitung rata-rata rating per teknisi/CS.
+-   **`Operational\TicketController`**
+    -   [x] **Create Ticket**: Form input, jenis keluhan, upload foto, validasi kuota.
+    -   [x] **Monitoring (Read)**: List tiket status Open/Assigned/Progress.
+    -   [x] **Update/Cancel**: Edit info tiket atau soft-delete jika cancel.
+-   **`Operational\AssignmentController`**
+    -   [x] **List Open Pool**: View tiket tersedia untuk teknisi.
+    -   [x] **Claim Job (FCFS)**: Mekanisme taking job dengan locking system (via `TicketService`).
+
+#### 3. Modul Eksekusi & Penanganan Darurat (EKD)
+
+-   **`Operational\AttendanceController`**
+    -   [x] **Check-in/Check-out**: Timestamp & Geo-tagging kehadiran teknisi.
+-   **`Operational\DocumentController`**
+    -   [x] **Upload BAST**: Upload bukti pekerjaan selesai.
+    -   [x] **Generate Surat Tugas**: Cetak PDF untuk akses lokasi.
+-   **`Operational\MonitoringController`**
+    -   [x] **Emergency Re-pool**: Force update status tiket kembali ke 'OPEN' (CS Override).
+    -   [x] **Extend Visit**: Request tambah hari kunjungan.
+
+#### 4. Modul Invoicing (FIN)
+
+-   **`Finance\InvoiceController`**
+    -   [x] **Generate Draft**: Auto-create saat tiket DONE (via `InvoiceService`).
+    -   [x] **Read/Preview**: Invoice detail view.
+    -   [x] **Sales Approval**: Edit amount discount/base sebelum final.
+    -   [x] **Mark Paid**: Update status lunas.
+
+#### 5. Modul Feedback & Rating (FDB)
+
+-   **`Api\FeedbackController`**
+    -   [x] **Public Form**: Endpoint gueest mode untuk rating.
+-   **`Admin\ReportController`**
+    -   [x] **KPI Dashboard**: Statistik performa teknisi/CS.
+
+### D. Inventory Controller & Status (Audit Results)
+
+Berikut adalah status terkini dari seluruh controller di `app/Http/Controllers` (New Rule: PascalCase Role-Based):
+
+| Controller                            | Status      | Kegunaan Utama                                                            |
+| :------------------------------------ | :---------- | :------------------------------------------------------------------------ |
+| **TechnicalSupport** (ex-Operational) |             |                                                                           |
+| `AssignmnentController`               | Implemented | List jobs & Taking job mechanism (FCFS) via `TicketService`.              |
+| `AttendanceController`                | Implemented | Check-in, Check-out, dan Request Extension teknisi.                       |
+| `DocumentController`                  | Implemented | Upload dokumen (BAST, dll) dan Generate Surat Tugas.                      |
+| `MonitoringController`                | Implemented | Dashboard monitoring harian & Emergency Repool logic.                     |
+| `TicketController`                    | Implemented | CRUD Ticket, Validation via FormRequest, Logic via `TicketService`.       |
+| **Sales** (ex-Finance)                |             |                                                                           |
+| `InvoiceController`                   | Implemented | Draft generation, Approval, & Update Status Invoice via `InvoiceService`. |
+| **Master**                            |             |                                                                           |
+| `CustomerController`                  | Implemented | CRUD Customer manual & Custom ID Generation mechanism.                    |
+| **CustomerService** (ex-Admin)        |             |                                                                           |
+| `ReportController`                    | Implemented | KPI Dashboard (Avg Rating per Teknisi).                                   |
+| `UserController`                      | Implemented | User Management (CRUD) & Role Assignment.                                 |
+| **Api**                               |             |                                                                           |
+| `FeedbackController`                  | Implemented | Endpoint public untuk submit feedback/rating.                             |
+| `WebhookController`                   | Implemented | Handle incoming webhook (e.g., WA Auto-register).                         |
+| **General**                           |             |                                                                           |
+| `CalendarController`                  | Implemented | Integrasi create event ke Google Calendar.                                |
+| `DashboardController`                 | **EMPTY**   | **Kosong**. Belum ada logic dashboard utama (Home).                       |
+| `ProfileController`                   | Implemented | Standard User Profile update (Breeze).                                    |

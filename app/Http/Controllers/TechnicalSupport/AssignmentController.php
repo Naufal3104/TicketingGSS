@@ -1,16 +1,24 @@
 <?php
 
-namespace App\Http\Controllers\Operational;
+namespace App\Http\Controllers\TechnicalSupport;
 
 use App\Http\Controllers\Controller;
 use App\Models\VisitAssignment;
 use App\Models\VisitTicket;
+use App\Services\TicketService; // Added for the new service
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 
 class AssignmentController extends Controller
 {
+    protected $ticketService;
+
+    public function __construct(TicketService $ticketService)
+    {
+        $this->ticketService = $ticketService;
+    }
+
     /**
      * Display a listing of OPEN jobs for TS.
      */
@@ -49,75 +57,19 @@ class AssignmentController extends Controller
 
         $user = Auth::user();
         // Pastikan user memiliki user_id (karena di database kolom ini nullable)
-        if (!$user || !$user->user_id) {
-             return response()->json([
-                 'success' => false, 
-                 'message' => 'Unauthorized or User ID not set in profile'
-             ], 401);
+        if (!$user) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Unauthorized'
+            ], 401);
         }
 
-        $tsId = $user->user_id;
-
-        if (!$tsId) {
-            return response()->json(['success' => false, 'message' => 'Unauthorized'], 401);
-        }
+        // Assuming Auth::id() is what we used in service for ts_id, or user_id property
+        // Service expects int tsId. Auth::id() returns int usually.
+        $tsId = Auth::id();
 
         try {
-            DB::beginTransaction();
-
-            // 1. Lock the Ticket for Update (Pessimistic Locking)
-            // This ensures no other process can modify this ticket's state while we check it
-            $ticket = VisitTicket::where('visit_ticket_id', $validated['visit_ticket_id'])
-                ->lockForUpdate()
-                ->first();
-
-            // 2. Validation: Is ticket still OPEN?
-            if (!$ticket || $ticket->status !== 'OPEN') {
-                DB::rollBack();
-                return response()->json([
-                    'success' => false,
-                    'message' => 'Job offering is no longer available (Taken or Cancelled).'
-                ], 409); // Conflict
-            }
-
-            // 3. Validation: TS Quota (Simple Logic: If OPEN, it needs someone)
-            // If we implement partial quota later, check here if (current_assignments < quota_needed)
-
-            // 4. Validation: TS Availability (Clash Check)
-            // Check if this TS has any ongoing assignment (PENDING or ON_SITE)
-            $ongoingAssignment = VisitAssignment::where('ts_id', $tsId)
-                ->whereIn('status', ['PENDING', 'ON_SITE'])
-                ->exists();
-
-            if ($ongoingAssignment) {
-                DB::rollBack();
-                return response()->json([
-                    'success' => false,
-                    'message' => 'You cannot take a new job while you have an active assignment.'
-                ], 422);
-            }
-
-            // 5. Create Assignment
-            $assignment = VisitAssignment::create([
-                'visit_ticket_id' => $ticket->visit_ticket_id,
-                'ts_id' => $tsId,
-                'status' => 'PENDING',
-                'assigned_at' => now(),
-            ]);
-
-            // 6. Update Ticket Status
-            // Assuming 1 Ticket = 1 Assignment (Job Taken)
-            $ticket->status = 'ASSIGNED';
-            $ticket->save();
-
-            DB::commit();
-
-            // Trigger n8n Webhook: Job Taken
-            try {
-                // Http::post(env('N8N_WEBHOOK_URL_JOB_TAKEN'), ['ticket_id' => $ticket->visit_ticket_id, 'ts_id' => $tsId]);
-                \Illuminate\Support\Facades\Log::info("Triggering n8n Webhook: Job Taken - Ticket: {$ticket->visit_ticket_id} by TS: {$tsId}");
-            } catch (\Exception $e) {
-            }
+            $assignment = $this->ticketService->claimTicket($validated['visit_ticket_id'], $tsId);
 
             return response()->json([
                 'success' => true,
@@ -125,11 +77,10 @@ class AssignmentController extends Controller
                 'data' => $assignment
             ], 201);
         } catch (\Exception $e) {
-            DB::rollBack();
             return response()->json([
                 'success' => false,
                 'message' => 'Failed to take job: ' . $e->getMessage()
-            ], 500);
+            ], 409); // Conflict or Bad Request
         }
     }
 

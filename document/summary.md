@@ -18,6 +18,23 @@
 | **FeedbackController**   | FDB    | Verified | `store()` endpoint for public feedback exists.                             |
 | **ReportController**     | FDB    | Verified | `index()` displays KPI Dashboard.                                          |
 
+### Phase 2: Service Layer Injection
+
+| Component             | Action   | Details                                                                    |
+| :-------------------- | :------- | :------------------------------------------------------------------------- | --- |
+| **TicketService**     | Created  | Encapsulates `createTicket` (ID gen, DB Transaction) and `updateTicket`.   |
+| **InvoiceService**    | Created  | Encapsulates `createDraft` (ID gen, Calcs) and `updateInvoice` (Approval). |
+| **TicketController**  | Refactor | Injected `TicketService`. Removed heavy logic from `store` & `update`.     |
+| **InvoiceController** | Refactor | Injected `InvoiceService`. Removed heavy logic from `store` & `update`.    |     |
+
+### Phase 3: Cleanup & Optimization
+
+| Component                | Action   | Details                                                                                     |
+| :----------------------- | :------- | :------------------------------------------------------------------------------------------ | --- | --- |
+| **VisitTicket Model**    | Scope    | Added `scopeOpen`, `scopeAssigned`, `scopeInProgress`, `scopeCompleted`.                    |
+| **TicketService**        | Feature  | Added `claimTicket` method (Locking, Validation, Assignment).                               |
+| **AssignmentController** | Refactor | Injected `TicketService`. `takeJob` now uses `claimTicket`, removing raw transaction logic. |     |     |
+
 ## Conclusion
 
 All controllers are now aligned with the **Plan Implementasi Controller & Fitur** in `task.md`.

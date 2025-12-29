@@ -110,6 +110,15 @@ return new UserResource($user); // Output terkontrol: { "id": 1, "name": "Budi",
 | **Solusi**  | **Pisahkan Folder Controller** per Role, gunakan **Service** untuk logic utamanya. |
 | **Manfaat** | Struktur folder rapi, akses kontrol jelas, tapi logic bisnis tetap terpusat (DRY). |
 
+
+
+
+untuk validasi gunakan formrequest. rubah semua validasi di controller menjadi formrequest (buatlah folder untuk formrequest)
+untuk logika bisnis, gunakan action. (buatlah folder untuk action)
+untuk query kompleks, gunakan query scopes. (buatlah folder untuk query scopes)
+untuk format response, gunakan api resource. (buatlah folder untuk api resource)
+dan jangan lupa untuk merubah struktur sesuai dengan role, seperti contoh dibawah ini 
+
 **Contoh Struktur:**
 
 ```text

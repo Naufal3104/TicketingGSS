@@ -66,4 +66,19 @@ class VisitTicket extends Model
     {
         return $query->where('status', 'OPEN');
     }
+
+    public function scopeAssigned($query)
+    {
+        return $query->where('status', 'ASSIGNED');
+    }
+
+    public function scopeInProgress($query)
+    {
+        return $query->where('status', 'IN_PROGRESS');
+    }
+
+    public function scopeCompleted($query)
+    {
+        return $query->whereIn('status', ['COMPLETED', 'COMPLETED_PENDING_DOCS']);
+    }
 }
