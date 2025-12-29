@@ -34,8 +34,8 @@ class TicketController extends Controller
         // If we use $user->hasRole('TS')
         if ($user->hasRole('TS')) {
             // TS sees tickets assigned to them
-            $query->whereHas('assignments', function ($q) use ($user) {
-                $q->where('user_id', $user->id);
+            $query->whereHas('assignment', function ($q) use ($user) {
+                $q->where('ts_id', $user->user_id);
             });
         } elseif ($user->hasRole('CS')) {
             // CS sees all or maybe usually created by them? Let's say all for collaboration

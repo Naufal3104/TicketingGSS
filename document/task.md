@@ -166,3 +166,6 @@ Berikut adalah status terkini dari seluruh controller di `app/Http/Controllers` 
 -   [x] **Sectioning Navigasi (Redirects)**: Admin/CS -> Dashboard, TS -> Assignments, Sales -> Invoices. Implementasi di `AuthenticatedSessionController`.
 -   [x] **Strict RBAC Middleware**: Enforce access control on routes via `web.php` groups.
 -   [x] **Sidebar Visibility**: Menu items disesuaikan dengan role user (Admin/CS, TS, Sales).
+
+upload dokumen yang diperlukan di list ticket
+sidebar untuk rating
