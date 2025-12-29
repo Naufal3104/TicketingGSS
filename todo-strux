@@ -225,5 +225,5 @@ app/Http/Controllers/
 -   [x] **TicketController.php**: Implement `index` method (List tickets logic based on role).
 
 
-benerin sectioning navigasi sesuai role
-tampilan awal langsung dilempar ke login aja dulu 
+[x] benerin sectioning navigasi sesuai role
+[] tampilan awal langsung dilempar ke login aja dulu 

@@ -162,3 +162,7 @@ Berikut adalah status terkini dari seluruh controller di `app/Http/Controllers` 
 | `CalendarController`                  | Implemented | Integrasi create event ke Google Calendar.                                |
 | `DashboardController`                 | **EMPTY**   | **Kosong**. Belum ada logic dashboard utama (Home).                       |
 | `ProfileController`                   | Implemented | Standard User Profile update (Breeze).                                    |
+
+-   [x] **Sectioning Navigasi (Redirects)**: Admin/CS -> Dashboard, TS -> Assignments, Sales -> Invoices. Implementasi di `AuthenticatedSessionController`.
+-   [x] **Strict RBAC Middleware**: Enforce access control on routes via `web.php` groups.
+-   [x] **Sidebar Visibility**: Menu items disesuaikan dengan role user (Admin/CS, TS, Sales).

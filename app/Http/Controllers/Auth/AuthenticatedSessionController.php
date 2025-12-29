@@ -28,11 +28,19 @@ class AuthenticatedSessionController extends Controller
 
         $request->session()->regenerate();
 
-        if ($request->user()->hasRole('admin')) {
-            return redirect()->intended('/');
+        if ($request->user()->hasRole(['Admin', 'CS'])) {
+            return redirect()->intended(route('dashboard', absolute: false));
         }
 
-        return redirect()->intended('/');
+        if ($request->user()->hasRole('TS')) {
+            return redirect()->intended(route('assignments.open', absolute: false));
+        }
+
+        if ($request->user()->hasRole('Sales')) {
+            return redirect()->intended(route('invoices.index', absolute: false));
+        }
+
+        return redirect()->intended(route('dashboard', absolute: false));
     }
 
     /**

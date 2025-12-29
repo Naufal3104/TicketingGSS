@@ -9,49 +9,54 @@
         </div>
         <p class="uppercase text-xs text-gray-600 mb-4 tracking-wider">homes</p>
 
+        @hasrole('Admin|CS')
         <a href="{{ route('dashboard-ecommerce') }}" class="mb-3 capitalize font-medium text-sm hover:text-teal-600 transition ease-in-out duration-500">
             <i class="fad fa-chart-pie text-xs mr-2"></i>
             Performance Report
         </a>
+        @endhasrole
 
+        @hasrole('TS|Admin|CS')
         <a href="{{ route('monitoring.index') }}" class="mb-3 capitalize font-medium text-sm hover:text-teal-600 transition ease-in-out duration-500">
             <i class="fad fa-desktop text-xs mr-2"></i>
             Monitoring Dashboard
         </a>
+        @endhasrole
 
         <p class="uppercase text-xs text-gray-600 mb-4 mt-4 tracking-wider">Operational</p>
 
+        @hasrole('Sales|Admin|CS')
         <a href="{{ route('customers.index') }}" class="mb-3 capitalize font-medium text-sm hover:text-teal-600 transition ease-in-out duration-500">
             <i class="fad fa-users text-xs mr-2"></i>
             Data Customer
         </a>
+        @endhasrole
 
+        @hasrole('TS|Admin|CS')
         <a href="{{ route('tickets.index') }}" class="mb-3 capitalize font-medium text-sm hover:text-teal-600 transition ease-in-out duration-500">
             <i class="fad fa-ticket-alt text-xs mr-2"></i>
             List Tiket
         </a>
 
-        {{-- <a href="{{ route('tickets.create') }}" class="mb-3 capitalize font-medium text-sm hover:text-teal-600 transition ease-in-out duration-500">
-            <i class="fad fa-plus-circle text-xs mr-2"></i>
-            Buat Tiket Baru
-        </a> --}}
-
         <a href="{{ route('assignments.open') }}" class="mb-3 capitalize font-medium text-sm hover:text-teal-600 transition ease-in-out duration-500">
             <i class="fad fa-tasks text-xs mr-2"></i>
             Job Pool (Tugas)
         </a>
+        @endhasrole
 
         <p class="uppercase text-xs text-gray-600 mb-4 mt-4 tracking-wider">Finance & Tools</p>
 
+        @hasrole('Sales|Admin|CS')
         <a href="{{ route('invoices.index') }}" class="mb-3 capitalize font-medium text-sm hover:text-teal-600 transition ease-in-out duration-500">
             <i class="fad fa-file-invoice-dollar text-xs mr-2"></i>
             Invoices
         </a>
+        @endhasrole
 
         <a href="{{ route('calendar') }}" class="mb-3 capitalize font-medium text-sm hover:text-teal-600 transition ease-in-out duration-500">
             <i class="fad fa-calendar-alt text-xs mr-2"></i>
             Calendar
         </a>
 
-        </div>
     </div>
+</div>
