@@ -119,16 +119,29 @@ class InvoiceController extends Controller
     {
         $request->validate([
             'status' => 'required|in:DRAFT,SENT,PAID,CANCELLED',
+            'amount_base' => 'nullable|numeric|min:0', // Allow update if Draft
+            'amount_discount' => 'nullable|numeric|min:0',
         ]);
 
-        $invoice->update([
+        $data = [
             'status' => $request->status,
             'paid_at' => $request->status === 'PAID' ? now() : ($request->status === 'DRAFT' ? null : $invoice->paid_at),
-        ]);
+        ];
 
-        \Illuminate\Support\Facades\Log::info("Triggering n8n Webhook: Invoice Status Updated - ID: {$invoice->invoice_id} to {$request->status}. Notify Customer.");
+        // Allow editing amounts only if DRAFT
+        if ($invoice->status === 'DRAFT' && $request->has('amount_base')) {
+            $base = $request->amount_base;
+            $discount = $request->amount_discount ?? $invoice->amount_discount;
+            $data['amount_base'] = $base;
+            $data['amount_discount'] = $discount;
+            $data['amount_final'] = max(0, $base - $discount);
+        }
 
-        return back()->with('success', 'Invoice status updated to ' . $request->status);
+        $invoice->update($data);
+
+        \Illuminate\Support\Facades\Log::info("Triggering n8n Webhook: Invoice Updated - ID: {$invoice->invoice_id} to {$request->status}.");
+
+        return back()->with('success', 'Invoice updated successfully.');
     }
 
     /**
