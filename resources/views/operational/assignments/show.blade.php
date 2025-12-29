@@ -9,7 +9,7 @@
     </div>
 
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        
+
         <div class="card bg-white border rounded shadow-md">
             <div class="card-header border-b border-gray-200">
                 <h2 class="font-bold text-gray-800">Informasi Tiket</h2>
@@ -35,12 +35,12 @@
                     <div>
                         <label class="block text-gray-500 text-xs uppercase tracking-wider mb-1">Prioritas</label>
                         @php
-                            $prioColor = match($ticket->priority_level) {
-                                'URGENT' => 'red',
-                                'HIGH' => 'orange',
-                                'MEDIUM' => 'blue',
-                                default => 'gray'
-                            };
+                        $prioColor = match($ticket->priority_level) {
+                        'URGENT' => 'red',
+                        'HIGH' => 'orange',
+                        'MEDIUM' => 'blue',
+                        default => 'gray'
+                        };
                         @endphp
                         <span class="text-xs font-bold text-{{ $prioColor }}-600 bg-{{ $prioColor }}-100 py-1 px-2 rounded">
                             {{ $ticket->priority_level }}
@@ -57,18 +57,20 @@
                 {{-- 3. Menampilkan Teknisi yang Bertugas --}}
                 <div class="mb-4 bg-gray-50 p-3 rounded border border-gray-100">
                     <label class="block text-gray-500 text-xs uppercase tracking-wider mb-2">Teknisi Bertugas (PIC)</label>
-                    @if($ticket->assignment && $ticket->assignment->user)
-                        <div class="flex items-center">
-                            <div class="w-6 h-6 rounded-full bg-green-100 flex items-center justify-center mr-2 text-green-700 font-bold text-xs">
-                                {{ substr($ticket->assignment->user->name, 0, 1) }}
-                            </div>
-                            <span class="font-semibold text-gray-700 text-sm">
-                                {{ $ticket->assignment->user->name }}
-                            </span>
+                    @forelse($ticket->assignment as $assign)
+                    @if($assign->ts)
+                    <div class="flex items-center mb-2">
+                        <div class="w-6 h-6 rounded-full bg-green-100 flex items-center justify-center mr-2 text-green-700 font-bold text-xs">
+                            {{ substr($assign->ts->name, 0, 1) }}
                         </div>
-                    @else
-                        <span class="text-sm text-gray-400 italic">Belum ada teknisi yang mengambil.</span>
+                        <span class="font-semibold text-gray-700 text-sm">
+                            {{ $assign->ts->name }}
+                        </span>
+                    </div>
                     @endif
+                    @empty
+                    <span class="text-sm text-gray-400 italic">Belum ada teknisi yang mengambil.</span>
+                    @endforelse
                 </div>
 
                 <div class="mb-4">
@@ -144,7 +146,7 @@
                             <option value="BAST_SIGNED">BAST (Tanda Tangan)</option>
                             <option value="EVIDENCE_PHOTO">Foto Bukti</option>
                         </select>
-                        <input type="file" name="file" class="w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100 mb-2"/>
+                        <input type="file" name="file" class="w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100 mb-2" />
                         <button type="submit" class="w-full bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-2 px-4 rounded transition-all">
                             Upload
                         </button>

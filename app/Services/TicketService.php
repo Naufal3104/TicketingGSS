@@ -25,7 +25,7 @@ class TicketService
             $ticket = VisitTicket::create([
                 'visit_ticket_id' => $ticketId,
                 'customer_id' => $data['customer_id'],
-                'created_by' => Auth::id() ?? 'SYSTEM',
+                'created_by' => Auth::user()?->user_id ?? 'SYSTEM',
                 'issue_category' => $data['issue_category'],
                 'issue_description' => $data['issue_description'],
                 'visit_address' => $data['visit_address'],
