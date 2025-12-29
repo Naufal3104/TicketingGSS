@@ -223,3 +223,7 @@ app/Http/Controllers/
 
 -   [x] **InvoiceController.php**: Implement `index` method (List invoices).
 -   [x] **TicketController.php**: Implement `index` method (List tickets logic based on role).
+
+
+benerin sectioning navigasi sesuai role
+tampilan awal langsung dilempar ke login aja dulu 

@@ -22,7 +22,9 @@
     <div id="navbar"
         class="animated md:hidden md:fixed md:top-0 md:w-full md:left-0 md:mt-16 md:border-t md:border-b md:border-gray-200 md:p-10 md:bg-white flex-1 pl-3 flex flex-row flex-wrap justify-between items-center md:flex-col md:items-center">
         <!-- left -->
-        <div
+        <!-- Middle Section (Empty) -->
+        <div></div>
+        <!-- <div
             class="text-gray-600 md:w-full md:flex md:flex-row md:justify-evenly md:pb-10 md:mb-10 md:border-b md:border-gray-200">
             <a class="mr-2 transition duration-500 ease-in-out hover:text-gray-900" href="#" title="email"><i
                     class="fad fa-envelope-open-text"></i></a>
@@ -32,7 +34,8 @@
                     class="fad fa-check-circle"></i></a>
             <a class="mr-2 transition duration-500 ease-in-out hover:text-gray-900" href="#" title="email"><i
                     class="fad fa-calendar-exclamation"></i></a>
-        </div>
+        </div> -->
+        <!-- end Middle Section -->
         <!-- end left -->
 
         <!-- right -->
@@ -82,11 +85,11 @@
                     <!-- end item -->
 
                     <!-- item -->
-                    <a class="px-4 py-2 block capitalize font-medium text-sm tracking-wide bg-white hover:bg-gray-200 hover:text-gray-900 transition-all duration-300 ease-in-out"
+                    <!-- <a class="px-4 py-2 block capitalize font-medium text-sm tracking-wide bg-white hover:bg-gray-200 hover:text-gray-900 transition-all duration-300 ease-in-out"
                         href="#">
                         <i class="fad fa-comment-alt-dots text-xs mr-1"></i>
                         chats
-                    </a>
+                    </a> -->
                     <!-- end item -->
 
                     <hr>
@@ -234,7 +237,7 @@
             <!-- end notifcation -->
 
             <!-- messages -->
-            <div class="dropdown relative mr-5 md:static">
+            <!-- <div class="dropdown relative mr-5 md:static">
 
                 <button
                     class="text-gray-500 menu-btn p-0 m-0 hover:text-gray-900 focus:text-gray-900 focus:outline-none transition-all ease-in-out duration-300">
@@ -245,7 +248,7 @@
 
                 <div
                     class="menu hidden md:w-full md:right-0 rounded bg-white shadow-md absolute z-20 right-0 w-84 mt-5 py-2 animated faster">
-                    <!-- top -->
+                    
                     <div class="px-4 py-2 flex flex-row justify-between items-center capitalize font-semibold text-sm">
                         <h1>messages</h1>
                         <div class="bg-teal-100 border border-teal-200 text-teal-500 text-xs rounded px-1">
@@ -253,11 +256,11 @@
                         </div>
                     </div>
                     <hr>
-                    <!-- end top -->
+                    
 
-                    <!-- body -->
+                    
 
-                    <!-- item -->
+                    
                     <a class="flex flex-row items-center justify-start px-4 py-4 block capitalize font-medium text-sm tracking-wide bg-white hover:bg-gray-200 transition-all duration-300 ease-in-out"
                         href="#">
 
@@ -277,9 +280,9 @@
 
                     </a>
                     <hr>
-                    <!-- end item -->
+                    
 
-                    <!-- item -->
+                    
                     <a class="flex flex-row items-center justify-start px-4 py-4 block capitalize font-medium text-sm tracking-wide bg-white hover:bg-gray-200 transition-all duration-300 ease-in-out"
                         href="#">
 
@@ -299,9 +302,9 @@
 
                     </a>
                     <hr>
-                    <!-- end item -->
+                    
 
-                    <!-- item -->
+                    
                     <a class="flex flex-row items-center justify-start px-4 py-4 block capitalize font-medium text-sm tracking-wide bg-white hover:bg-gray-200 transition-all duration-300 ease-in-out"
                         href="#">
 
@@ -320,12 +323,10 @@
                         </div>
 
                     </a>
-                    <!-- end item -->
+                    
+                    
 
-
-                    <!-- end body -->
-
-                    <!-- bottom -->
+                    
                     <hr>
                     <div class="px-4 py-2 mt-2">
                         <a href="#"
@@ -333,9 +334,9 @@
                             view all
                         </a>
                     </div>
-                    <!-- end bottom -->
+                    
                 </div>
-            </div>
+            </div> -->
             <!-- end messages -->
 
 
